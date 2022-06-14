@@ -17,7 +17,6 @@ export default function Box({gen, price, fontSettings}) {
       return { price: 0 }
     });
     const dResult = nearPrice.price * priceInNear;
-    setDollar(dResult);
   }, [])
   
   const labelStyle = {

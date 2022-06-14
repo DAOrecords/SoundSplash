@@ -2,15 +2,7 @@ import React from 'react';
 import loaderIcon from "../../assets/player-loader.gif";
 
 
-export default function PlayerControls({playing, setPlay, loading}) {
-  function stopPlaying() {
-    setPlay(false);
-  }
-
-  function startPlaying() {
-    setPlay(true);
-  }
-
+export default function PlayerControls({playing, startPlaying, stopPlaying}) {
   return (
     <div id='lineEqControls'>
       {playing

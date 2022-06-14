@@ -2,7 +2,7 @@ import React from 'react'
 import PlayerControls from './PlayerControls'
 
 
-export default function ThePicture({imageCID, playing, setPlay}) {
+export default function ThePicture({imageCID, playing, startPlaying, stopPlaying}) {
   let userAgentString = navigator.userAgent;
   let safariAgent = userAgentString.indexOf("Safari") > -1;
   if (userAgentString.indexOf("Chrome") > -1) safariAgent = false;                             // Some browsers are spoofing user agent by adding a string like
@@ -17,7 +17,7 @@ export default function ThePicture({imageCID, playing, setPlay}) {
         src={`https://daorecords.io:8443/fetch?cid=${imageCID}`}
       >
       </img>
-      {!safariAgent && <PlayerControls playing={playing} setPlay={setPlay} />}
+      <PlayerControls playing={playing} startPlaying={startPlaying} stopPlaying={stopPlaying} />
     </div>
   )
 }
