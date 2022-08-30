@@ -4,6 +4,7 @@ const fs = require('fs');
 const https = require('https');
 const uploadRoutes = require('./routes/upload.js');
 const fetchRoutes = require('./routes/fetch.js');
+const fillRoutes = require('./routes/fill.js');
 
 const sslOptions = {
   key: fs.readFileSync('/etc/letsencrypt/live/daorecords.io/privkey.pem'),
@@ -24,6 +25,7 @@ app.get('/', function (req, res) {
 // Routes
 app.use('/upload', uploadRoutes);
 app.use('/fetch', fetchRoutes);
+app.use('/fill', fillRoutes);
 
 
 const sslApp = https.createServer(sslOptions, app);
