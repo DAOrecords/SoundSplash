@@ -37,7 +37,10 @@ router.get('/nfts_by_owner', async function(req, res) {
     changeMethods: ['new_default_meta', 'new', 'mint_root', 'set_crust_key', 'buy_nft_from_vault', 'transfer_nft', 'create_guestbook_entry', 'withdraw', 'copy'],
   });
 
-  await contract.nft_metadata()
+  await contract.nft_tokens_for_owner({
+    account_id: "optr.near",
+    limit: 10000,
+  })
     .then((msg) => console.log("Success! The message: ", msg))
     .catch((err) => console.error("There was an error: ", err));
 
