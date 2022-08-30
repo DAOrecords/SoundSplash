@@ -26,6 +26,7 @@ const connectionConfig = {
 
 
 router.get('/nfts_by_owner', async function(req, res) {
+  let window = {};
   window.nearConnection = await connect(connectionConfig);
   window.walletConnection = new WalletConnection(nearConnection);
   window.accountId = walletConnection.getAccountId();
