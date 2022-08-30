@@ -9,7 +9,7 @@ const homedir = require("os").homedir();
 
 const ACCOUNT_ID = "unsafe_server_account.optr.near";  // NEAR account tied to the keyPair
 const NETWORK_ID = "mainnet";
-const KEY_PATH = '../unsafe_server_account.optr.near.json';
+const KEY_PATH = './unsafe_server_account.optr.near.json';
 
 const credentials = JSON.parse(fs.readFileSync(KEY_PATH));
 const myKeyStore = new keyStores.InMemoryKeyStore();
