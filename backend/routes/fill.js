@@ -28,7 +28,7 @@ router.get('/nfts_by_owner', async function(req, res) {
   };
 
   //const nearConnection = await connect(connectionConfig);
-  const near = await connect(Object.assign({ deps: { keyStore: myKeyStore } }, connectionConfig));
+  const near = await connect(Object.assign({ deps: { keyStore: new keyStores.InMemoryKeyStore(NETWORK_ID, ACCOUNT_ID, KeyPair.fromString(credentials.private_key)) } }, connectionConfig));
   const walletConnection = new WalletConnection(near);
   //const accountId = walletConnection.getAccountId();
 
