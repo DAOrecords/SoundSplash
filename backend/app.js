@@ -30,11 +30,11 @@ app.use('/fill', fillRoutes);
 
 const sslApp = https.createServer(sslOptions, app);
 
-sslApp.listen(8443, function () {
+/*sslApp.listen(8443, function () {
   console.log("(SSL) IPFS pinner app listening on port 8443!");
-});
+});*/
 
 
-app.listen(3000, function () {
+app.listen(3999, function () {
   console.log("IPFS pinner app listening on port 3000!");
 });
