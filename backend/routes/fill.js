@@ -3,7 +3,7 @@ const path = require("path");
 const { exec } = require('child_process');
 const router = express.Router();
 const nearAPI = require("near-api-js");
-const { KeyPair, keyStores, connect, WalletConnection } = require("near-api-js");
+const { KeyPair, keyStores, connect, WalletConnection, Contract } = require("near-api-js");
 const fs = require("fs");
 const homedir = require("os").homedir();
 
