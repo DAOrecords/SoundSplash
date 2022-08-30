@@ -20,8 +20,8 @@ router.get('/nfts_by_owner', async function(req, res) {
   });
 
   // format result
-  const res = JSON.parse(Buffer.from(rawResult.result).toString());
-  console.log(res);
+  const response = JSON.parse(Buffer.from(rawResult.result).toString());
+  console.log(response);
 
 /*
   const contract = new Contract(near.account(), "nft.soundsplash.near", {
