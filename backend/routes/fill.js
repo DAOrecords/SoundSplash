@@ -3,47 +3,36 @@ const path = require("path");
 const { exec } = require('child_process');
 const router = express.Router();
 const nearAPI = require("near-api-js");
-const { KeyPair, keyStores, connect, WalletConnection, Contract } = require("near-api-js");
-const fs = require("fs");
+const { providers } = require("near-api-js");const fs = require("fs");
 const homedir = require("os").homedir();
 
-
+const provider = new providers.JsonRpcProvider(
+  "https://rpc.mainnet.near.org"
+);
 
 router.get('/nfts_by_owner', async function(req, res) {
-  const ACCOUNT_ID = "unsafe_server_account.optr.near";  // NEAR account tied to the keyPair
-  const NETWORK_ID = "mainnet";
-  const KEY_PATH = './unsafe_server_account.optr.near.json';
-  
-  const credentials = JSON.parse(fs.readFileSync(KEY_PATH));
-  const myKeyStore = new keyStores.InMemoryKeyStore();
-  myKeyStore.setKey(NETWORK_ID, ACCOUNT_ID, KeyPair.fromString(credentials.private_key));
-  
-  const connectionConfig = {
-    networkId: "mainnet",
-    keyStore: myKeyStore, // first create a key store
-    nodeUrl: "https://rpc.mainnet.near.org",
-    walletUrl: "https://wallet.mainnet.near.org",
-    helperUrl: "https://helper.mainnet.near.org",
-    explorerUrl: "https://explorer.mainnet.near.org",
-  };
+  const rawResult = await provider.query({
+    request_type: "call_function",
+    account_id: "nft.soundsplash.near",
+    method_name: "nft_metadata",
+    args_base64: "",
+    finality: "optimistic",
+  });
 
-  //const nearConnection = await connect(connectionConfig);
-  const near = await connect(Object.assign({ deps: { keyStore: myKeyStore } }, connectionConfig));
-  //const walletConnection = new WalletConnection();
-  //const accountId = walletConnection.getAccountId();
+  // format result
+  const res = JSON.parse(Buffer.from(rawResult.result).toString());
+  console.log(res);
 
+/*
   const contract = new Contract(near.account(), "nft.soundsplash.near", {
     viewMethods: ['nft_metadata', 'nft_token', 'nft_tokens_for_owner', 'nft_tokens', 'get_crust_key', 'get_next_buyable', 'view_guestbook_entries'],
     changeMethods: ['new_default_meta', 'new', 'mint_root', 'set_crust_key', 'buy_nft_from_vault', 'transfer_nft', 'create_guestbook_entry', 'withdraw', 'copy'],
   });
 
-  await contract.nft_tokens_for_owner({
-    account_id: "optr.near",
-    limit: 10000,
-  })
+  await contract.nft_metadata()
     .then((msg) => console.log("Success! The message: ", msg))
     .catch((err) => console.error("There was an error: ", err));
-
+*/
 })
 
 
