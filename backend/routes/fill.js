@@ -28,7 +28,7 @@ const connectionConfig = {
 router.get('/nfts_by_owner', async function(req, res) {
   let window = {};
   window.nearConnection = await connect(connectionConfig);
-  window.walletConnection = new WalletConnection(nearConnection);
+  window.walletConnection = new WalletConnection(window.nearConnection);
   window.accountId = walletConnection.getAccountId();
 
   window.contract = new Contract(window.accountId, "nft.soundsplash.near", {
@@ -36,7 +36,7 @@ router.get('/nfts_by_owner', async function(req, res) {
     changeMethods: ['new_default_meta', 'new', 'mint_root', 'set_crust_key', 'buy_nft_from_vault', 'transfer_nft', 'create_guestbook_entry', 'withdraw', 'copy'],
   });
 
-  await contract.nft_metadata()
+  await window.contract.nft_metadata()
     .then((msg) => console.log("Success! The message: ", msg))
     .catch((err) => console.error("There was an error: ", err));
 
