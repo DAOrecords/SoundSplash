@@ -7,36 +7,36 @@ const { KeyPair, keyStores, connect, WalletConnection, Contract } = require("nea
 const fs = require("fs");
 const homedir = require("os").homedir();
 
-const ACCOUNT_ID = "unsafe_server_account.optr.near";  // NEAR account tied to the keyPair
-const NETWORK_ID = "mainnet";
-const KEY_PATH = './unsafe_server_account.optr.near.json';
-
-const credentials = JSON.parse(fs.readFileSync(KEY_PATH));
-const myKeyStore = new keyStores.InMemoryKeyStore();
-myKeyStore.setKey(NETWORK_ID, ACCOUNT_ID, KeyPair.fromString(credentials.private_key));
-
-const connectionConfig = {
-  networkId: "mainnet",
-  keyStore: myKeyStore, // first create a key store
-  nodeUrl: "https://rpc.mainnet.near.org",
-  walletUrl: "https://wallet.mainnet.near.org",
-  helperUrl: "https://helper.mainnet.near.org",
-  explorerUrl: "https://explorer.mainnet.near.org",
-};
 
 
 router.get('/nfts_by_owner', async function(req, res) {
-  let window = {};
-  window.nearConnection = await connect(connectionConfig);
-  window.walletConnection = new WalletConnection(window.nearConnection);
-  window.accountId = walletConnection.getAccountId();
+  const ACCOUNT_ID = "unsafe_server_account.optr.near";  // NEAR account tied to the keyPair
+  const NETWORK_ID = "mainnet";
+  const KEY_PATH = './unsafe_server_account.optr.near.json';
+  
+  const credentials = JSON.parse(fs.readFileSync(KEY_PATH));
+  const myKeyStore = new keyStores.InMemoryKeyStore();
+  myKeyStore.setKey(NETWORK_ID, ACCOUNT_ID, KeyPair.fromString(credentials.private_key));
+  
+  const connectionConfig = {
+    networkId: "mainnet",
+    keyStore: myKeyStore, // first create a key store
+    nodeUrl: "https://rpc.mainnet.near.org",
+    walletUrl: "https://wallet.mainnet.near.org",
+    helperUrl: "https://helper.mainnet.near.org",
+    explorerUrl: "https://explorer.mainnet.near.org",
+  };
+  
+  const nearConnection = await connect(connectionConfig);
+  const walletConnection = new WalletConnection(nearConnection);
+  const accountId = walletConnection.getAccountId();
 
-  window.contract = new Contract(window.accountId, "nft.soundsplash.near", {
+  const contract = new Contract(accountId, "nft.soundsplash.near", {
     viewMethods: ['nft_metadata', 'nft_token', 'nft_tokens_for_owner', 'nft_tokens', 'get_crust_key', 'get_next_buyable', 'view_guestbook_entries'],
     changeMethods: ['new_default_meta', 'new', 'mint_root', 'set_crust_key', 'buy_nft_from_vault', 'transfer_nft', 'create_guestbook_entry', 'withdraw', 'copy'],
   });
 
-  await window.contract.nft_metadata()
+  await contract.nft_metadata()
     .then((msg) => console.log("Success! The message: ", msg))
     .catch((err) => console.error("There was an error: ", err));
 
