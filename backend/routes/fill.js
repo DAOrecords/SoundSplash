@@ -26,11 +26,11 @@ const connectionConfig = {
 
 
 router.get('/nfts_by_owner', async function(req, res) {
-  const nearConnection = await connect(connectionConfig);
-  const walletConnection = new WalletConnection(nearConnection);
-  const accountId = walletConnection.getAccountId();
+  window.nearConnection = await connect(connectionConfig);
+  window.walletConnection = new WalletConnection(nearConnection);
+  window.accountId = walletConnection.getAccountId();
 
-  const contract = new Contract(accountId, "nft.soundsplash.near", {
+  window.contract = new Contract(window.accountId, "nft.soundsplash.near", {
     viewMethods: ['nft_metadata', 'nft_token', 'nft_tokens_for_owner', 'nft_tokens', 'get_crust_key', 'get_next_buyable', 'view_guestbook_entries'],
     changeMethods: ['new_default_meta', 'new', 'mint_root', 'set_crust_key', 'buy_nft_from_vault', 'transfer_nft', 'create_guestbook_entry', 'withdraw', 'copy'],
   });
