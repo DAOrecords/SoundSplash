@@ -16,7 +16,7 @@ const provider = new providers.JsonRpcProvider(
 const pool = new Pool({
   user: process.env.DB_USERNAME,
   host: 'localhost',
-  database: 'contracts',
+  database: 'daorecords',
   password: process.env.DB_PASSWORD,
   port: 5432,
 });
