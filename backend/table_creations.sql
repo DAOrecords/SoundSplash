@@ -4,3 +4,6 @@ CREATE TABLE contracts(
   contract_name VARCHAR(255) NOT NULL UNIQUE,
   owner_dao VARCHAR(255)
 );
+
+--We insert the lines manually, because as of now this is something that does not happen very often.
+INSERT INTO contracts (contract_name, owner_dao) VALUES ('test.near', 'the_dao.near');
