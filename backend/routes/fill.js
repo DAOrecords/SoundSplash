@@ -28,7 +28,7 @@ router.get('/nfts_by_owner', async function(req, res) {
 
   let contractName = null;
 
-  pool.query('SELECT * FROM contracts')
+  await pool.query('SELECT * FROM contracts')
     .then((res) => contractName = res.rows[0].contract_name)
     .catch((err) => setImmediate(() => {
       throw err;
