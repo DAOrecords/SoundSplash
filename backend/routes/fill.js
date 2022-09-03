@@ -16,15 +16,22 @@ const provider = new providers.JsonRpcProvider(
 const pool = new Pool({
   user: process.env.DB_USERNAME,
   host: 'localhost',
-  database: 'dbadmin',
+  database: 'contracts',
   password: process.env.DB_PASSWORD,
   port: 5432,
 });
+pool.connect();
 
 
 router.get('/nfts_by_owner', async function(req, res) {
   const viewMethods = ['nft_metadata', 'nft_token', 'nft_tokens_for_owner', 'nft_tokens', 'get_crust_key', 'get_next_buyable', 'view_guestbook_entries'];
 
+  pool.query('SELECT * FROM contracts')
+    .then((res) => console.log('result: ', res[0]))
+    .catch((err) => setImmediate(() => {
+      throw err;
+    })
+  );
   const rawResult = await provider.query({
     request_type: "call_function",
     account_id: "nft.soundsplash.near",
