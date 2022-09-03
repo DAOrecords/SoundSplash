@@ -36,6 +36,6 @@ const sslApp = https.createServer(sslOptions, app);
 
 
 app.listen(3999, function () {
-  console.log("IPFS pinner app listening on port 3000!");
+  //console.log("IPFS pinner app listening on port 3000!");
   console.log("Welcome back!")
 });
