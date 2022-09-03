@@ -26,15 +26,17 @@ pool.connect();
 router.get('/nfts_by_owner', async function(req, res) {
   const viewMethods = ['nft_metadata', 'nft_token', 'nft_tokens_for_owner', 'nft_tokens', 'get_crust_key', 'get_next_buyable', 'view_guestbook_entries'];
 
+  let contractName = null;
+
   pool.query('SELECT * FROM contracts')
-    .then((res) => console.log('result: ', res))
+    .then((res) => contractName = res.rows[0].contract_name)
     .catch((err) => setImmediate(() => {
       throw err;
     })
   );
   const rawResult = await provider.query({
     request_type: "call_function",
-    account_id: "nft.soundsplash.near",
+    account_id: contractName,
     method_name: "nft_metadata",
     args_base64: "",
     finality: "optimistic",
