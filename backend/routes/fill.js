@@ -27,7 +27,7 @@ router.get('/nfts_by_owner', async function(req, res) {
   const viewMethods = ['nft_metadata', 'nft_token', 'nft_tokens_for_owner', 'nft_tokens', 'get_crust_key', 'get_next_buyable', 'view_guestbook_entries'];
 
   pool.query('SELECT * FROM contracts')
-    .then((res) => console.log('result: ', res[0]))
+    .then((res) => console.log('result: ', res))
     .catch((err) => setImmediate(() => {
       throw err;
     })
