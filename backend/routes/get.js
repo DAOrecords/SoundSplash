@@ -23,7 +23,9 @@ router.get('/thumbnail', async function (req, res) {
   try {
     const rootID = req.query.root_id;
     const contract = req.query.contract;
-    await pool.query('SELECT thumbnail FROM nft_thumbnails WHERE uniq_id = $1', [contract + rootID])
+    const uniqID = contract + rootID;
+    console.log("uniq_id: ", uniqID);
+    await pool.query('SELECT thumbnail FROM nft_thumbnails WHERE uniq_id = $1', [uniqID])
       .then((res) => {
         console.log("res: ", res)
         res.send({
