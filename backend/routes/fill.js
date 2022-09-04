@@ -27,31 +27,56 @@ pool.connect();
 router.get('/nfts_by_owner', async function(req, res) {
   const viewMethods = ['nft_metadata', 'nft_token', 'nft_tokens_for_owner', 'nft_tokens', 'get_crust_key', 'get_next_buyable', 'view_guestbook_entries'];
 
-  let contractName = null;
+  let contracts = [];
   let args = {
     limit: 4294967296
   }
 
   await pool.query('SELECT * FROM contracts')
-    .then((res) => contractName = res.rows[0].contract_name)
+    .then((res) => contracts = res.rows)
     .catch((err) => setImmediate(() => {
       throw err;
     })
   );
 
-  console.log("contractName: ", contractName);
+  // We go through all the contracts
+  contracts.map((contract) => {
+    try {
+      const rawResult = await provider.query({
+        request_type: "call_function",
+        account_id: contract.contract_name,
+        method_name: "nft_tokens",
+        args_base64: "eyJmcm9tX2luZGV4IjoiMCIsImxpbWl0IjoxMDAwMDAwMH0=",
+        finality: "optimistic",
+      });
+    
+      const response = JSON.parse(Buffer.from(rawResult.result).toString());
+    
+      if (response.length >= 9999999) console.error("                               \
+        We are reaching the limit that we set for nft_tokens, which is 10 million!  \
+        At this point, we should probably request the list of NFTs with pagination. \
+      ");
+    
+      // We insert every NFT that is not already inserted. We overwrite the owner, if it has changed.
+      response.map((nft) => {
+        
+        const uniqID = contract.contract_name + nft.token_id;
 
-  const rawResult = await provider.query({
-    request_type: "call_function",
-    account_id: contractName,
-    method_name: "nft_tokens",
-    args_base64: "eyJmcm9tX2luZGV4IjoiMCIsImxpbWl0Ijo1MDAwMDAwfQ==",
-    finality: "optimistic",
+        await pool.query(`INSERT INTO nfts_by_owner (uniq_id, owner_account, contract, nft_id) \
+          VALUES (${uniqID}, ${nft.owner_id}, ${contract.contract_name}, ${nft.token_id}) \
+          ON DUPLICATE KEY UPDATE \
+          owner_account = ${nft.owner_id} \
+        `)
+          .then((msg) => console.log("next"))
+          .catch((err) => setImmediate(() => {
+            throw err;
+          }))
+      });
+      
+    } catch (error) {
+      console.error("There was an error while trying to fetch the nft_tokens to fill the 'nfts_by_owner' table: '", error);
+    }
   });
-
-  const response = JSON.parse(Buffer.from(rawResult.result).toString());
-  console.log(response);
-
 })
 
 
