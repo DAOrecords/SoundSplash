@@ -131,7 +131,7 @@ router.get('/nft_thumbnails', async function (req, res) {
                 await sharp(buffer)
                   .jpeg({ quality: 20 })
                   .toBuffer((data) => {
-                    let base64Value = Buffer.from(data).toString('base64');
+                    let base64Value = data.toString('base64');
                     console.log(base64Value);
                   });
               });
