@@ -130,12 +130,12 @@ router.get('/nft_thumbnails', async function (req, res) {
             fs.read(fd, buffer, offset, len, pos, async function (err, bytes, buffer) {
                 await sharp(buffer)
                   .resize(300, 300)
-                  .webp({ quality: 10 })
+                  .webp({ quality: 6 })
                   .toBuffer()
                   .then((data) => {
                     let base64Value = data.toString('base64');
                     console.log("base64Value length: ", base64Value.length);
-                    res.send(base64Value);
+                    console.log("base64: ", base64Value)
                   })
                   .catch((err) => {
                     console.error("There was an error while trying to compress the image: ", err);
