@@ -72,8 +72,10 @@ router.get('/nfts_by_owner', async function(req, res) {
       
     } catch (error) {
       console.error("There was an error while trying to fetch the nft_tokens to fill the 'nfts_by_owner' table: '", error);
+      res.send("There was an error while trying to fill the nfts_by_owner table.", error);
     }
   });
+  res.send("Filling up the nfts_by_owner table was successfull.");
 })
 
 
