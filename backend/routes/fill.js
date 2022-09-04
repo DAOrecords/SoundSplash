@@ -119,30 +119,41 @@ router.get('/nft_thumbnails', async function (req, res) {
       const roots = response.filter((nft) => nft.token_id.match(/fono-root-[0-9](?!.*-[0-9])/g));
       
       roots.map(async (nft) => {
-        exec(`ipfs get ${nft.metadata.media} -o /tmp`, function (error, stdout, stderr) {
-          if (error) {                                                                      // ipfs command gave an error
-            console.error(`error: ${error.message}`);
-            return;
-          }
-          let buffer = Buffer.alloc(len);
-
-          fs.open('/tmp/' + nft.metadata.media, 'r', (err, fd) => {
-            fs.read(fd, buffer, offset, len, pos, async function (err, bytes, buffer) {
-                await sharp(buffer)
-                  .resize(300, 300)
-                  .webp({ quality: 6 })
-                  .toBuffer()
-                  .then((data) => {
-                    let base64Value = data.toString('base64');
-                    console.log("base64Value length: ", base64Value.length);
-                    console.log("base64: ", base64Value)
-                  })
-                  .catch((err) => {
-                    console.error("There was an error while trying to compress the image: ", err);
+        const uniqID = contract.contract_name + nft.token_id;
+        await pool.query('SELECT * FROM nft_thumbnails WHERE uniq_id = $1', [uniqID])
+          .then((res) => {
+            if (res.rows.length === 0) {
+              exec(`ipfs get ${nft.metadata.media} -o /tmp`, function (error, stdout, stderr) {
+                if (error) {                                                                      // ipfs command gave an error
+                  console.error(`error: ${error.message}`);
+                  return;
+                }
+                let buffer = Buffer.alloc(len);
+      
+                fs.open('/tmp/' + nft.metadata.media, 'r', (err, fd) => {
+                  fs.read(fd, buffer, offset, len, pos, async function (err, bytes, buffer) {
+                    sharp(buffer)
+                      .resize(300, 300)
+                      .webp({ quality: 6 })
+                      .toBuffer()
+                      .then((data) => {
+                        let base64Image = data.toString('base64');
+                        
+                        await pool.query('INSERT INTO nft_thumbnails (uniq_id, contract, root_nft, thumbnail) VALUES ($1, $2, $3, $4)', [
+                          uniqID, contract.contract_name, nft.token_id, base64Image
+                        ]).catch((err) => console.error("There was an error while trying to insert the new record to nft_thumbnails"));
+                        //console.log("base64Value length: ", base64Image.length);
+                        //console.log("base64: ", base64Image)
+                      })
+                      .catch((err) => {
+                        console.error("There was an error while trying to compress the image: ", err);
+                      });
                   });
-              });
+                })
+              })
+            }
           })
-        })
+          .catch((error) => console.error("There was an error while querying the already existing thumbnails"));
       })
       
 
