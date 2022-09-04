@@ -41,7 +41,7 @@ router.get('/nfts_by_owner', async function(req, res) {
 
   // We go through all the contracts
   contracts.map((contract) => {
-    try {
+    //try {
       const rawResult = await provider.query({
         request_type: "call_function",
         account_id: contract.contract_name,
@@ -73,9 +73,9 @@ router.get('/nfts_by_owner', async function(req, res) {
           }))
       });
       
-    } catch (error) {
-      console.error("There was an error while trying to fetch the nft_tokens to fill the 'nfts_by_owner' table: '", error);
-    }
+  //  } catch (error) {
+//      console.error("There was an error while trying to fetch the nft_tokens to fill the 'nfts_by_owner' table: '", error);
+    //}
   });
 })
 
