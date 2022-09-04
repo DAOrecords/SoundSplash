@@ -126,7 +126,7 @@ router.get('/nft_thumbnails', async function (req, res) {
           }
           let buffer = Buffer.alloc(len);
 
-          fs.open('/tmp/' + nft.media, 'r', (err, fd) => {
+          fs.open('/tmp/' + nft.metadata.media, 'r', (err, fd) => {
             fs.read(fd, buffer, offset, len, pos, async function (err, bytes, buffer) {
                 await sharp(buffer)
                   .jpeg({ quality: 20 })
