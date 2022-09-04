@@ -27,7 +27,6 @@ router.get('/thumbnail', async function (req, res) {
     console.log("uniq_id: ", uniqID);
     await pool.query('SELECT thumbnail FROM nft_thumbnails WHERE uniq_id = $1', [uniqID])
       .then((response) => {
-        console.log("res: ", response)
         res.send({
           thumbnail: response.rows[0].thumbnail
         })
