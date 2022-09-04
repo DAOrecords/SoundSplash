@@ -6,6 +6,7 @@ const { providers } = require("near-api-js");const fs = require("fs");
 const pg = require('pg');
 const Pool = require('pg').Pool;
 const dotenv = require('dotenv');
+const sharp = require('sharp');
 //const { async } = require('regenerator-runtime');
 //const { base64 } = require('near-sdk-as');
 dotenv.config();
@@ -85,6 +86,10 @@ router.get('/nfts_by_owner', async function(req, res) {
 // The thumbnails are in the SQL database, base64 encoded
 router.get('/nft_thumbnails', async function (req, res) {
   let contracts = [];
+  const len = 2 * 1024 * 1024;                                                      // 2 MB
+  const pos = 0;
+  const offset = 0;
+
 
   await pool.query('SELECT * FROM contracts')
     .then((res) => contracts = res.rows)
@@ -112,7 +117,28 @@ router.get('/nft_thumbnails', async function (req, res) {
       ");
 
       const roots = response.filter((nft) => nft.token_id.match(/fono-root-[0-9](?!.*-[0-9])/g));
-      console.log("Roots: ", roots);
+      
+      roots.map(async (nft) => {
+        exec(`ipfs get ${nft.media} -o /tmp`, function (error, stdout, stderr) {
+          if (error) {                                                                      // ipfs command gave an error
+            console.error(`error: ${error.message}`);
+            return;
+          }
+          let buffer = Buffer.alloc(len);
+
+          fs.open('/tmp/' + nft.media, 'r', (err, fd) => {
+            fs.read(fd, buffer, offset, len, pos, async function (err, bytes, buffer) {
+                await sharp(buffer)
+                  .jpeg({ quality: 20 })
+                  .toBuffer((data) => {
+                    let base64Value = Buffer.from(data).toString('base64');
+                    console.log(base64Value);
+                  });
+              });
+          })
+        })
+      })
+      
 
     } catch (error) {
       console.error("There was an error while trying to create the thumbnails: ", error);

@@ -16,3 +16,13 @@ CREATE TABLE nfts_by_owner(
   contract VARCHAR(255) NOT NULL,
   nft_id VARCHAR(255) NOT NULL
 );
+
+
+-- Create the 'nft_thumbnails' table, where 'nft_id' is not unique, the same ID can exist on each contract. 'uniq_id' is contract+nft_id
+-- 'thumbnail' is base64 encoded image
+CREATE TABLE nft_thumbnails(
+  uniq_id VARCHAR(512) PRIMARY KEY,
+  contract VARCHAR(255) NOT NULL,
+  root_nft VARCHAR(255) NOT NULL,
+  thumbnail VARCHAR(32768) NOT NULL
+);
