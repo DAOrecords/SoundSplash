@@ -68,6 +68,8 @@ router.get('/nfts_by_owner', async function(req, res) {
           ON DUPLICATE KEY UPDATE \
           owner_account = '${nft.owner_id}'`;
 
+        console.log(queryString);
+
         await pool.query(queryString)
           .then((msg) => console.log("next"))
           .catch((err) => setImmediate(() => {
