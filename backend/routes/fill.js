@@ -119,7 +119,7 @@ router.get('/nft_thumbnails', async function (req, res) {
       const roots = response.filter((nft) => nft.token_id.match(/fono-root-[0-9](?!.*-[0-9])/g));
       
       roots.map(async (nft) => {
-        exec(`ipfs get ${nft.media} -o /tmp`, function (error, stdout, stderr) {
+        exec(`ipfs get ${nft.metadata.media} -o /tmp`, function (error, stdout, stderr) {
           if (error) {                                                                      // ipfs command gave an error
             console.error(`error: ${error.message}`);
             return;
