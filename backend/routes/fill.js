@@ -6,6 +6,7 @@ const { providers } = require("near-api-js");const fs = require("fs");
 const pg = require('pg');
 const Pool = require('pg').Pool;
 const dotenv = require('dotenv');
+const { async } = require('regenerator-runtime');
 //const { base64 } = require('near-sdk-as');
 dotenv.config();
 
@@ -40,7 +41,7 @@ router.get('/nfts_by_owner', async function(req, res) {
   );
 
   // We go through all the contracts
-  const asyncRes = await Promise.all(contracts.map(async (contract) => {
+  contracts.map(async (contract) => {
     try {
       const rawResult = await provider.query({
         request_type: "call_function",
@@ -58,7 +59,7 @@ router.get('/nfts_by_owner', async function(req, res) {
       ");
     
       // We insert every NFT that is not already inserted. We overwrite the owner, if it has changed.
-      response.map((nft) => {
+      response.map(async (nft) => {
         
         const uniqID = contract.contract_name + nft.token_id;
 
@@ -76,7 +77,7 @@ router.get('/nfts_by_owner', async function(req, res) {
     } catch (error) {
       console.error("There was an error while trying to fetch the nft_tokens to fill the 'nfts_by_owner' table: '", error);
     }
-  }));
+  });
 })
 
 
