@@ -129,7 +129,7 @@ router.get('/nft_thumbnails', async function (req, res) {
           fs.open('/tmp/' + nft.metadata.media, 'r', (err, fd) => {
             fs.read(fd, buffer, offset, len, pos, async function (err, bytes, buffer) {
                 await sharp(buffer)
-                  .webp({ quality: 50 })
+                  .webp({ quality: 10 })
                   .toBuffer()
                   .then((data) => {
                     let base64Value = data.toString('base64');
