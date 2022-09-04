@@ -42,7 +42,7 @@ router.get('/nfts_by_owner', async function(req, res) {
     request_type: "call_function",
     account_id: contractName,
     method_name: "nft_tokens",
-    args_base64: "eyJsaW1pdCI6NDI5NDk2NzI5Nn0=",
+    args_base64: "eyJmcm9tX2luZGV4IjoiMCIsImxpbWl0Ijo0Mjk0OTY3Mjk2fQ==",
     finality: "optimistic",
   });
 
