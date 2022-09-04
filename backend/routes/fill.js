@@ -38,6 +38,9 @@ router.get('/nfts_by_owner', async function(req, res) {
       throw err;
     })
   );
+
+  console.log("contractName: ", contractName);
+
   const rawResult = await provider.query({
     request_type: "call_function",
     account_id: contractName,
