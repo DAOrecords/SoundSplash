@@ -16,7 +16,21 @@ pool.connect();
 
 
 router.get('/nft_list_for_owner', function (req, res) {
+  try {
+    const user = req.query.user;
 
+    await pool.query('SELECT (contract, nft_id) WHERE owner_account = $1', [user])
+      .then((response) => {
+        res.send({
+          user: user,
+          nft_list: response.rows
+        });
+      })
+      .catch((error) => console.error("There was an error while querying the database for NFTs for a given user: ", error));
+  } catch (error) {
+    console.error("There was an error while trying to fetch the list of NFTs for a given user: ", error);
+    res.send({message: "There was an error while trying to fetch the list of NFTs for a given user", error: error})
+  }
 });
 
 router.get('/thumbnail', async function (req, res) {
@@ -24,7 +38,7 @@ router.get('/thumbnail', async function (req, res) {
     const rootID = req.query.root_id;
     const contract = req.query.contract;
     const uniqID = contract + rootID;
-    console.log("uniq_id: ", uniqID);
+    
     await pool.query('SELECT thumbnail FROM nft_thumbnails WHERE uniq_id = $1', [uniqID])
       .then((response) => {
         res.send({
