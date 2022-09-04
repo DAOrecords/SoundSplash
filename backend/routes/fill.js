@@ -1,14 +1,10 @@
 const express = require('express');
-const path = require("path");
 const { exec } = require('child_process');
 const router = express.Router();
 const { providers } = require("near-api-js");const fs = require("fs");
-const pg = require('pg');
 const Pool = require('pg').Pool;
 const dotenv = require('dotenv');
 const sharp = require('sharp');
-//const { async } = require('regenerator-runtime');
-//const { base64 } = require('near-sdk-as');
 dotenv.config();
 
 // NEAR
