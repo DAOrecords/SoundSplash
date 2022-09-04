@@ -139,7 +139,7 @@ router.get('/nft_thumbnails', async function (req, res) {
                       .then((data) => {
                         let base64Image = data.toString('base64');
                         
-                        await pool.query('INSERT INTO nft_thumbnails (uniq_id, contract, root_nft, thumbnail) VALUES ($1, $2, $3, $4)', [
+                        pool.query('INSERT INTO nft_thumbnails (uniq_id, contract, root_nft, thumbnail) VALUES ($1, $2, $3, $4)', [
                           uniqID, contract.contract_name, nft.token_id, base64Image
                         ]).catch((err) => console.error("There was an error while trying to insert the new record to nft_thumbnails"));
                         //console.log("base64Value length: ", base64Image.length);
