@@ -6,7 +6,7 @@ const { providers } = require("near-api-js");const fs = require("fs");
 const pg = require('pg');
 const Pool = require('pg').Pool;
 const dotenv = require('dotenv');
-const { base64 } = require('near-sdk-as');
+//const { base64 } = require('near-sdk-as');
 dotenv.config();
 
 
