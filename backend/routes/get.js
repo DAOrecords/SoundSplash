@@ -26,10 +26,10 @@ router.get('/thumbnail', async function (req, res) {
     const uniqID = contract + rootID;
     console.log("uniq_id: ", uniqID);
     await pool.query('SELECT thumbnail FROM nft_thumbnails WHERE uniq_id = $1', [uniqID])
-      .then((res) => {
-        console.log("res: ", res)
+      .then((response) => {
+        console.log("res: ", response)
         res.send({
-          thumbnail: res.rows[0].thumbnail
+          thumbnail: response.rows[0].thumbnail
         })
       })
       .catch((error) => console.error("Error while querying thumbnail: ", error));
