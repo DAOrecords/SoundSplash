@@ -21,9 +21,16 @@ router.get('/nft_list_for_owner', async function (req, res) {
 
     await pool.query('SELECT (contract, nft_id) FROM nfts_by_owner WHERE owner_account = $1', [user])
       .then((response) => {
+        let nftList = [];
+
+        response.rows.map((row) => nftList.push({
+          contract: row.contract,
+          nft_id: row.nft_id
+        }));
+
         res.send({
           user: user,
-          nft_list: response.rows
+          nft_list: nftList
         });
       })
       .catch((error) => console.error("There was an error while querying the database for NFTs for a given user: ", error));
