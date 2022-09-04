@@ -26,12 +26,7 @@ pool.connect();
 
 
 router.get('/nfts_by_owner', async function(req, res) {
-  const viewMethods = ['nft_metadata', 'nft_token', 'nft_tokens_for_owner', 'nft_tokens', 'get_crust_key', 'get_next_buyable', 'view_guestbook_entries'];
-
   let contracts = [];
-  let args = {
-    limit: 4294967296
-  }
 
   await pool.query('SELECT * FROM contracts')
     .then((res) => contracts = res.rows)
@@ -68,13 +63,10 @@ router.get('/nfts_by_owner', async function(req, res) {
           ON CONFLICT (uniq_id) DO UPDATE \
             SET owner_account = '${nft.owner_id}'`;
 
-        console.log(queryString);
-
         await pool.query(queryString)
-          .then((msg) => console.log("next"))
+          .then(() => console.log(`Inserted or updated ${nft.token_id} on contract ${contract.contract_name}`))
           .catch((err) => setImmediate(() => {
             console.error("Insert error: ", err);
-            //throw err;
           }))
       });
       
