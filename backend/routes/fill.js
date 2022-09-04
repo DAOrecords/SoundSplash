@@ -6,15 +6,16 @@ const { providers } = require("near-api-js");const fs = require("fs");
 const pg = require('pg');
 const Pool = require('pg').Pool;
 const dotenv = require('dotenv');
-const { async } = require('regenerator-runtime');
+//const { async } = require('regenerator-runtime');
 //const { base64 } = require('near-sdk-as');
 dotenv.config();
 
-
+// NEAR
 const provider = new providers.JsonRpcProvider(
   "https://rpc.mainnet.near.org"
 );
 
+// PostgreSQL connection details
 const pool = new Pool({
   user: process.env.DB_USERNAME,
   host: 'localhost',
@@ -25,6 +26,7 @@ const pool = new Pool({
 pool.connect();
 
 
+// By calling this route, we can fill up the database with all the NFTs that exist accross the system, with owner ID
 router.get('/nfts_by_owner', async function(req, res) {
   let contracts = [];
 
@@ -75,9 +77,50 @@ router.get('/nfts_by_owner', async function(req, res) {
       res.send("There was an error while trying to fill the nfts_by_owner table.", error);
     }
   });
-  res.send("Filling up the nfts_by_owner table was successfull.");
+  res.send("Filling up the nfts_by_owner table was successfull!");
 })
 
+
+// By calling this route, we can fill up the database with thumbnails for faster MyNFTs page loading. 
+// The thumbnails are in the SQL database, base64 encoded
+router.get('/nft_thumbnails', async function (req, res) {
+  let contracts = [];
+
+  await pool.query('SELECT * FROM contracts')
+    .then((res) => contracts = res.rows)
+    .catch((err) => setImmediate(() => {
+      throw err;
+    })
+  );
+
+  // We go through all the contracts
+  contracts.map(async (contract) => {
+    try {
+      const rawResult = await provider.query({                                   // The contract does not have a view function which takes an NFT ID as parameter
+        request_type: "call_function",
+        account_id: contract.contract_name,
+        method_name: "nft_tokens",
+        args_base64: "eyJmcm9tX2luZGV4IjoiMCIsImxpbWl0IjoxMDAwMDAwMH0=",
+        finality: "optimistic",
+      });
+    
+      const response = JSON.parse(Buffer.from(rawResult.result).toString());
+    
+      if (response.length >= 9999999) console.error("                               \
+        We are reaching the limit that we set for nft_tokens, which is 10 million!  \
+        At this point, we should probably request the list of NFTs with pagination. \
+      ");
+
+      const roots = response.filter((nft) => nft.token_id.match(/fono-root-[0-9](?!.*-[0-9])/g));
+      console.log("Roots: ", roots);
+
+    } catch (error) {
+      console.error("There was an error while trying to create the thumbnails: ", error);
+      res.send("There was an error while trying to create the thumbnails: ", error);
+    }
+  });
+  res.send("Creating the thumbnails for the NFTs was successfull!");
+});
 
 
 module.exports = router;
