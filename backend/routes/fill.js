@@ -63,11 +63,12 @@ router.get('/nfts_by_owner', async function(req, res) {
         
         const uniqID = contract.contract_name + nft.token_id;
 
-        await pool.query(`INSERT INTO nfts_by_owner (uniq_id, owner_account, contract, nft_id) \
+        const queryString = `INSERT INTO nfts_by_owner (uniq_id, owner_account, contract, nft_id) \
           VALUES ('${uniqID}', '${nft.owner_id}', '${contract.contract_name}', '${nft.token_id}') \
           ON DUPLICATE KEY UPDATE \
-          owner_account = '${nft.owner_id}' \
-        `)
+          owner_account = '${nft.owner_id}'`;
+
+        await pool.query(queryString)
           .then((msg) => console.log("next"))
           .catch((err) => setImmediate(() => {
             console.error("Insert error: ", err);
