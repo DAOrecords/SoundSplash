@@ -6,6 +6,7 @@ const { providers } = require("near-api-js");const fs = require("fs");
 const pg = require('pg');
 const Pool = require('pg').Pool;
 const dotenv = require('dotenv');
+const { base64 } = require('near-sdk-as');
 dotenv.config();
 
 
@@ -27,6 +28,9 @@ router.get('/nfts_by_owner', async function(req, res) {
   const viewMethods = ['nft_metadata', 'nft_token', 'nft_tokens_for_owner', 'nft_tokens', 'get_crust_key', 'get_next_buyable', 'view_guestbook_entries'];
 
   let contractName = null;
+  let args = {
+    limit: 4294967296
+  }
 
   await pool.query('SELECT * FROM contracts')
     .then((res) => contractName = res.rows[0].contract_name)
@@ -38,7 +42,7 @@ router.get('/nfts_by_owner', async function(req, res) {
     request_type: "call_function",
     account_id: contractName,
     method_name: "nft_metadata",
-    args_base64: "",
+    args_base64: args.toString('base64'),
     finality: "optimistic",
   });
 
