@@ -65,8 +65,8 @@ router.get('/nfts_by_owner', async function(req, res) {
 
         const queryString = `INSERT INTO nfts_by_owner (uniq_id, owner_account, contract, nft_id) \
           VALUES ('${uniqID}', '${nft.owner_id}', '${contract.contract_name}', '${nft.token_id}') \
-          ON DUPLICATE KEY UPDATE \
-          owner_account = '${nft.owner_id}'`;
+          ON CONFLICT ('${uniqID}') DO UPDATE \
+            SET owner_account = '${nft.owner_id}'`;
 
         console.log(queryString);
 
