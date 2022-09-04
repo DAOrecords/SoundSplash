@@ -70,6 +70,7 @@ router.get('/nfts_by_owner', async function(req, res) {
         `)
           .then((msg) => console.log("next"))
           .catch((err) => setImmediate(() => {
+            console.error("Insert error: ", err);
             throw err;
           }))
       });
