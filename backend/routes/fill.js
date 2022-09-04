@@ -41,7 +41,7 @@ router.get('/nfts_by_owner', async function(req, res) {
   const rawResult = await provider.query({
     request_type: "call_function",
     account_id: contractName,
-    method_name: "nft_metadata",
+    method_name: "nft_tokens",
     args_base64: "eyJsaW1pdCI6NDI5NDk2NzI5Nn0=",
     finality: "optimistic",
   });
