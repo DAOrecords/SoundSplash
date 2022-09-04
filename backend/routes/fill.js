@@ -135,6 +135,7 @@ router.get('/nft_thumbnails', async function (req, res) {
                   .then((data) => {
                     let base64Value = data.toString('base64');
                     console.log("base64Value length: ", base64Value.length);
+                    res.json({image: base64Value});
                   })
                   .catch((err) => {
                     console.error("There was an error while trying to compress the image: ", err);
