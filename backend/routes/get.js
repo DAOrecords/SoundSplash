@@ -22,7 +22,7 @@ router.get('/nft_list_for_owner', async function (req, res) {
     await pool.query('SELECT (contract, nft_id) FROM nfts_by_owner WHERE owner_account = $1', [user])
       .then((response) => {
         let nftList = [];
-
+        console.log("response: ", response)
         response.rows.map((row) => nftList.push({
           contract: row.contract,
           nft_id: row.nft_id
