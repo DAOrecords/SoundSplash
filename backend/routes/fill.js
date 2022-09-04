@@ -40,7 +40,7 @@ router.get('/nfts_by_owner', async function(req, res) {
   );
 
   // We go through all the contracts
-  contracts.map(async (contract) => {
+  const asyncRes = await Promise.all(contracts.map(async (contract) => {
     try {
       const rawResult = await provider.query({
         request_type: "call_function",
@@ -76,7 +76,7 @@ router.get('/nfts_by_owner', async function(req, res) {
     } catch (error) {
       console.error("There was an error while trying to fetch the nft_tokens to fill the 'nfts_by_owner' table: '", error);
     }
-  });
+  }));
 })
 
 
