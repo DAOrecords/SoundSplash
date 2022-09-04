@@ -15,7 +15,7 @@ const pool = new Pool({
 pool.connect();
 
 
-router.get('/nft_list_for_owner', function (req, res) {
+router.get('/nft_list_for_owner', async function (req, res) {
   try {
     const user = req.query.user;
 
