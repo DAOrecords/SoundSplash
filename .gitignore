@@ -31,10 +31,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # We exclude the target folder because it takes up a lot of space 
-/contract/target
+#/contract/target
 /marketplace-contract/target/
-contract/target/*
-marketplace-contract/target/*
 
 # report
 report.*
