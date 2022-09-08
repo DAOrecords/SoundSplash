@@ -57,20 +57,23 @@ export default function Wallet({setShowWallet, showWallet, setMenuOpen, setSplas
         </div>
 
         {showWallet && (
-          <div id="wallet" className="mainWalletContainer">
-            <div id="mainWalletBalanceFlex">
-              <p>BALANCE</p>
-              
-              <p className="walletFlexPlaceholder"></p>
-              <p>{formatNumber(balance, 3)}</p>
-            </div>            
-            <div id="mainWalletDollarFlex">
-              <p className="walletFlexPlaceholder"></p>
-              <p>~ ${formatNumber(dollar, 2)}</p>
+          <div id="popupWrapper" onClick={() => setShowWallet(false)}>
+            <div id="wallet" className="mainWalletContainer" onClick={(e) => e.stopPropagation()}>
+              <div id="mainWalletBalanceFlex">
+                <p>BALANCE</p>
+                
+                <p className="walletFlexPlaceholder"></p>
+                <p>{formatNumber(balance, 3)}</p>
+              </div>            
+              <div id="mainWalletDollarFlex">
+                <p className="walletFlexPlaceholder"></p>
+                <p>~ ${formatNumber(dollar, 2)}</p>
+              </div>
+              <div id="mainWalletButtonContainer">
+                <button onClick={disconnectClicked} id="mainDisconnect">DISCONNECT</button>
+              </div>
             </div>
-            <div id="mainWalletButtonContainer">
-              <button onClick={disconnectClicked} id="mainDisconnect">DISCONNECT</button>
-            </div>
+
           </div>
         )}
       </>

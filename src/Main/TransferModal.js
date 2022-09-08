@@ -188,7 +188,7 @@ export default function TransferModal({newAction}) {
         }
       </div>
 
-      {transferInputOpen && (<div id="transferPopupWrapper" onClick={() => setTransferInputOpen(false)}>
+      {transferInputOpen && (<div id="popupWrapper" className="darkened" onClick={() => setTransferInputOpen(false)}>
         <div id="transferPopup" onClick={e => e.stopPropagation()} >
           <p className="transferPopupTitle">Confirm Transfer</p>
           <div>

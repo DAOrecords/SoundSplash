@@ -87,7 +87,7 @@ export default function InfoModal({id, metadata, newAction, setOpenModal}) {
   
   return (
     <>
-      <div id="transferPopupWrapper" onClick={() => setOpenModal(false)}>
+      <div id="popupWrapper" onClick={() => setOpenModal(false)}>
         <div className="troacoModal" onClick={(e) => e.stopPropagation()}>
           <div id="troacoModalContent">
             <div id="troacoModalPicture">
@@ -203,7 +203,7 @@ export default function InfoModal({id, metadata, newAction, setOpenModal}) {
         </div>
       </div>
 
-      {transferInputOpen && (<div id="transferPopupWrapper" onClick={() => setTransferInputOpen(false)}>
+      {transferInputOpen && (<div id="popupWrapper" onClick={() => setTransferInputOpen(false)}>
         <div id="transferPopup" onClick={e => e.stopPropagation()} >
           <p className="transferPopupTitle">Confirm Transfer</p>
           <div>

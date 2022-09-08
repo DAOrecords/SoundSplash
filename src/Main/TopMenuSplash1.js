@@ -68,19 +68,21 @@ export default function TopMenuSplash1({setShowWallet, showWallet}) {
         <Link to={'/my-nfts'} className="controlsButton menuButton">MY NFTS</Link>
 
         {splashMenuOpen && (
-          <div id="dropdownContainer">
-            {/** List of the drops, we will append this as we go */}
-            <Link to={'/weektwo'} className="controlsButton menuButton">Week Two</Link>
-            <Link to={'/weekthree'} className="controlsButton menuButton">Week Three</Link>
-            <Link to={'/weekfour'} className="controlsButton menuButton">Week Four</Link>
-            <Link to={'/weekfive'} className="controlsButton menuButton">Week Five</Link>
-            <Link to={'/weeksix'} className="controlsButton menuButton">Week Six</Link>
-            <Link to={'/weekseven'} className="controlsButton menuButton">Week Seven</Link>
-            <Link to={'/weekeight'} className="controlsButton menuButton">Week Eight</Link>
-            <Link to={'/weeknine'} className="controlsButton menuButton">Week Nine</Link>
-            <Link to={'/weekten'} className="controlsButton menuButton">Week Ten</Link>
-            <Link to={'/weekeleven'} className="controlsButton menuButton">Week Eleven</Link>
-            <Link to={'/weektwelve'} className="controlsButton menuButton">Week Twelve</Link>
+          <div id="popupWrapper" onClick={() => setSplashMenuOpen(false)}>
+            <div id="dropdownContainer"  onClick={(e) => e.stopPropagation()}>
+              {/** List of the drops, we will append this as we go */}
+              <Link to={'/weektwo'} className="controlsButton menuButton">Week Two</Link>
+              <Link to={'/weekthree'} className="controlsButton menuButton">Week Three</Link>
+              <Link to={'/weekfour'} className="controlsButton menuButton">Week Four</Link>
+              <Link to={'/weekfive'} className="controlsButton menuButton">Week Five</Link>
+              <Link to={'/weeksix'} className="controlsButton menuButton">Week Six</Link>
+              <Link to={'/weekseven'} className="controlsButton menuButton">Week Seven</Link>
+              <Link to={'/weekeight'} className="controlsButton menuButton">Week Eight</Link>
+              <Link to={'/weeknine'} className="controlsButton menuButton">Week Nine</Link>
+              <Link to={'/weekten'} className="controlsButton menuButton">Week Ten</Link>
+              <Link to={'/weekeleven'} className="controlsButton menuButton">Week Eleven</Link>
+              <Link to={'/weektwelve'} className="controlsButton menuButton">Week Twelve</Link>
+            </div>
           </div>
         )}
 

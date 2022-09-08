@@ -316,7 +316,7 @@ nav {
   display: block;
 }
 .dropdownContainerSplashTwo {
-  right: 500px !important;
+  right: 420px !important;
 }
 
 footer {
@@ -448,9 +448,8 @@ main {
   border-radius: 2px;
   font-size: 12px;
   top: 58px;
-  right: 50px;
   padding: 16px;
-  right: 220px;
+  right: 100px;
   width: 183px;
   height: 99px;
   text-transform: uppercase;
@@ -1938,14 +1937,16 @@ input[type="range"] {
 
 
 
-#transferPopupWrapper {
+#popupWrapper {
   position: absolute;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(17, 17, 17, 0.4);
   z-index: 4;
+}
+.darkened {
+  background: rgba(17, 17, 17, 0.4);
 }
 #transferPopup {
   position: absolute;

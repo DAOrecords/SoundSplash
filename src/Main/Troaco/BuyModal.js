@@ -36,7 +36,7 @@ export default function TokenModal({id, metadata, newAction, setOpenModal}) {
   
   
   return (
-    <div id="transferPopupWrapper" onClick={() => setOpenModal(false)}>
+    <div id="popupWrapper" onClick={() => setOpenModal(false)}>
       <div className="troacoModal" onClick={(e) => e.stopPropagation()}>
         <div id="troacoModalContent">
           <div id="troacoModalPicture">
