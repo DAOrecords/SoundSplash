@@ -18,12 +18,12 @@ export default function SplashLanding({index, newAction, openGuestBook, setGuest
   const [play, setPlay] = React.useState(false);
 
   React.useEffect(async () => {    
-    const urlParams = window.location.search;
-    if (urlParams.includes('errorCode')) {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('errorCode')) {
       newAction({
-        errorMsg: "There was an error while processing the transaction!", errorMsgDesc: URLSearchParams.get('errorCode'),
+        errorMsg: "There was an error while processing the transaction!", errorMsgDesc: urlParams.get('errorCode'),
       }); 
-    } else if (urlParams.includes('transactionHashes')) {
+    } else if (urlParams.has('transactionHashes')) {
       newAction({
         successMsg: "Success!", successMsgDesc: "You bought a new NFT!",
       });

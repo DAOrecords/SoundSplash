@@ -35,12 +35,12 @@ export default function Admin({newAction, vault}) {
   
 
   useEffect(async () => {
-    const urlParams = window.location.search;
-    if (urlParams.includes('errorCode')) {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('errorCode')) {
       newAction({
-        errorMsg: "There was an error during the transaction!", errorMsgDesc: URLSearchParams.get('errorCode'),
+        errorMsg: "There was an error during the transaction!", errorMsgDesc: urlParams.get('errorCode'),
       }); 
-    } else if (urlParams.includes('transactionHashes')) {
+    } else if (urlParams.has('transactionHashes')) {
       newAction({
         successMsg: "NFT Minted!", successMsgDesc: "The new RootNFT was successfully minted",
       });
