@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import AudioPlayer from '../Common/AudioPlayer';
 import AudioPlayerNftStorage from "../Common/AudioPlayerNftStorage";
-import { getAllFromRoot, getContractName, getNftDetails, transferNft, verify_sha256 } from '../utils';
+import { getAllFromRoot, getContractName, getNftDetailsForList, transferNft, verify_sha256 } from '../utils';
 import artistLists from '../artistLists.json';
 
 
@@ -44,8 +44,7 @@ export default function TransferModal({newAction}) {
 
     const vaultName = await getContractName();
     setVaultName(vaultName);
-    
-    const fetchedToken = await getNftDetails(params.tokenId);
+    const fetchedToken = (await getNftDetailsForList(params.contract, [params.tokenId]))[0];
     setToken(fetchedToken);
     setExtra(JSON.parse(fetchedToken.metadata.extra));
     setIsOwner(fetchedToken.owner_id === window.accountId);

@@ -143,7 +143,7 @@ export default function App() {
           }
         />
         <Route
-          path='nfts/:tokenId'
+          path='/contract/nfts/:contract/:tokenId'
           element={<TransferModal newAction={newAction} />}
         />
         {/** The 12 SoundSplash NFT Landing Pages */}

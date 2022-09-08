@@ -1,8 +1,12 @@
-import { connect, Contract, keyStores, WalletConnection, utils, KeyPair } from 'near-api-js';
+import { connect, Contract, keyStores, WalletConnection, utils, KeyPair, providers } from 'near-api-js';
 import * as nearAPI from "near-api-js";
 const CryptoJS = require('crypto-js');
 
 const mode = 'mainnet';       // 'mainnet' || 'development'
+
+const provider = new providers.JsonRpcProvider(
+  "https://rpc.mainnet.near.org"
+);
 
 /** Real config. It's async. It was important when we tried to clone the site, so the config is not burnt in */
 async function getRealConfig(env) {
@@ -57,7 +61,7 @@ export async function initContract() {
   window.accountId = window.walletConnection.getAccountId()                                // Getting the Account ID. If still unauthorized, it's just empty string
   
   window.contract = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
-    viewMethods: ['nft_metadata', 'nft_token', 'nft_tokens_for_owner', 'nft_tokens', 'get_crust_key', 'get_next_buyable', 'view_guestbook_entries'],
+    viewMethods: ['nft_metadata', 'nft_token', 'nft_tokens_for_owner', 'nft_tokens', 'get_crust_key', 'get_next_buyable', 'view_guestbook_entries', 'nft_token_details_for_list'],
     changeMethods: ['new_default_meta', 'new', 'mint_root', 'set_crust_key', 'buy_nft_from_vault', 'transfer_nft', 'create_guestbook_entry', 'withdraw', 'copy'],
   })
 }
@@ -271,24 +275,26 @@ export async function getGuestBookEntries() {
   return result;
 }
 
-// Get details for a given NFT (JsonToken)
-// Currently we can only do this by fetching all of the NFTs, and then filtering them.
-export async function getNftDetails(tokenId) {
-  let result = null;
-  
-  const options = {
-    from_index: "0",
-    limit: 1000000000,
+// Get details for a provided NFT list 
+export async function getNftDetailsForList(contract, list) {
+  const params = {
+    token_list: list
   }
+console.log(contract);console.log(list)
+  const stringObj = JSON.stringify(params);
+  const base64Obj = btoa(stringObj);
+ 
+  const rawResult = await provider.query({
+    request_type: "call_function",
+    account_id: contract,
+    method_name: "nft_token_details_for_list",
+    args_base64: base64Obj,
+    finality: "optimistic",
+  });
 
-  await window.contract.nft_tokens(options)
-    .then((response) => {
-      console.log("Response (getNftDetails): ", response);
-      result = response.filter((nft) => nft.token_id === tokenId)[0];
-    })
-    .catch((err) => console.error("Error while fetching NFT list (getNftDetails): ", err));
+  const result = JSON.parse(Buffer.from(rawResult.result).toString());
 
-    return result;
+  return result;
 }
 
 // does not work

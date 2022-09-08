@@ -9,7 +9,9 @@ export default function NftCard({playClicked, artistList, openTransfer, index, m
   const extra = JSON.parse(metadata.extra);
   const priceInNear = utils.format.formatNearAmount(extra.original_price);
   const lastDash = tokenId.lastIndexOf('-');
-  const rootID = tokenId.slice(0, lastDash);
+  const dashes = tokenId.match(/-/g);
+  let rootID = tokenId.slice(0, lastDash);
+  if (dashes.length === 2) rootID = tokenId;                      // Root NFT
   const [picture, setPicture] = useState(null);
 
   function formatNumber(number, maxDecimal) {
@@ -17,11 +19,22 @@ export default function NftCard({playClicked, artistList, openTransfer, index, m
   }
 
   useEffect(async () => {
+    console.log("fetch: ", `https://daorecords.io:8443/get/thumbnail?root_id=${rootID}&contract=${contract}`)
     await fetch(`https://daorecords.io:8443/get/thumbnail?root_id=${rootID}&contract=${contract}`)
       .then((res) => res.json())
       .then((json) => setPicture("data:image/webp;base64," + json.thumbnail))
       .catch((err) => console.error("Error while fetching base64 image ", err));
-  }, [])
+  }, [tokenId, contract]);
+
+  function stakeClicked(event) {
+    event.stopPropagation();
+    window.alert("Stake clicked. This is not implemented yet.");
+  }
+
+  function sellClicked(event) {
+    event.stopPropagation();
+    window.alert("Sell clicked. This is not implemented yet.");
+  }
 
   return (
     <>
@@ -35,7 +48,8 @@ export default function NftCard({playClicked, artistList, openTransfer, index, m
             {metadata.title}
           </p>
           <ul className="nftCardArtistList">
-            {artistList.map((artist, i) => (
+            not implemented
+            {false && artistList.map((artist, i) => (
               <li key={"artist-" + i} className="nftCardArtistListElement">
                 <img src={placeholder} alt={''}></img>
                 <p>@{artist.name}</p>
@@ -48,8 +62,8 @@ export default function NftCard({playClicked, artistList, openTransfer, index, m
             <img src={nearLogo} alt={'N'}></img>
           </div>
           <div className="nftCardButtons">
-            <button className="nftCardSecondaryButton">Stake</button>
-            <button className="nftCardPrimaryButton">Buy</button>
+            <button onClick={(e) => stakeClicked(e)} className="nftCardSecondaryButton">Stake</button>
+            <button onClick={(e) => sellClicked(e)} className="nftCardPrimaryButton">Sell</button>
           </div>
         </div>
       </button>

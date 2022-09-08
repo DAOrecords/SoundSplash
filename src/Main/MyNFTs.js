@@ -3,7 +3,7 @@ import { ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from './Footer';
 import TopMenu from './TopMenu';
-import { getListForAccount, getNftDetails, verify_sha256 } from '../utils';
+import { getListForAccount, getNftDetailsForList } from '../utils';
 import NftCard from './NftCard';
 import artistLists from '../artistLists.json';
 import { useNavigate } from 'react-router-dom';
@@ -44,43 +44,47 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
   let navigate = useNavigate();
 
   useEffect(async () => {
-    let isMounted = true;
+    const nftList = await getListForAccount();
+    console.log("nftList", nftList);
 
-    if (isMounted) {
-      const nftList = await getListForAccount();
-      console.log("nftList", nftList);
-      const mockNftList = [...nftList, ...nftList, ...nftList, ...nftList];
-      
-      /* We have to prepair the values here */
-      const mergedNftList = await Promise.all(mockNftList.map(async (nftItem, index) => {
-        const currentNft = await getNftDetails(nftItem.nft_id);
-        const newObj = { ...mockNftList[index], ...currentNft };  
-        return newObj;
-      }));
+    let nftDetailsLists = nftList.filter((nftItem, index) =>                                  // This will contain multiple lists, each element of the array is a contract
+                            nftList.findIndex(nftObj => nftObj.contract === nftItem.contract) === index)
+                                    .map((item) => {return { contract: item.contract, nftDetailsList: null }});
 
-      console.log("mergedNftList: ", mergedNftList)
-  
-  
-      let nPages = [];
-      let page = 0;
-      for (let i = 0; i < mergedNftList.length; i = i + cardFitCount) {
-        nPages[page] = mergedNftList.slice(i, i+cardFitCount);
-        page++;
-      }
-      console.log("nftPages: ", nPages);
-  
-  
-      setNftPags(nPages);
-      setList(mergedNftList);
+    for (let i = 0; i < nftDetailsLists.length; i++) {
+      const contract = nftDetailsLists[i].contract;
+      const list = nftList.filter((nft) => nft.contract === contract)
+                          .map(nft => nft.nft_id);
 
+      nftDetailsLists[i].nftDetailsList = await getNftDetailsForList(contract, list);
     }
+    console.log("nftDetailsLists", nftDetailsLists)
 
-    return () => { isMounted = false }
+    const mergedNftList = nftList.map((nftItem, i) => {
+      const correspondingList = nftDetailsLists.filter((currentList) => currentList.contract === nftItem.contract)[0].nftDetailsList;
+      const correspondingDetails = correspondingList.filter((currentNft) => currentNft.token_id === nftItem.nft_id)[0];
+      const newObj = { ...nftItem, ...correspondingDetails };
+      return newObj;
+    });
+
+    console.log("mergedNftList: ", mergedNftList)
+
+    let nPages = [];
+    let page = 0;
+    for (let i = 0; i < mergedNftList.length; i = i + cardFitCount) {
+      nPages[page] = mergedNftList.slice(i, i+cardFitCount);
+      page++;
+    }
+    console.log("nftPages: ", nPages);
+
+
+    setNftPags(nPages);
+    setList(mergedNftList);
   }, []);
 
 
-  function openTransfer(tokenId) {
-    navigate('/nfts/' + tokenId);
+  function openTransfer(contract, tokenId) {
+    navigate('/contract/nfts/' + contract + '/' + tokenId);
   }
 
   function getArtistIndex(tokenId) {
@@ -104,7 +108,7 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
   }
 
   function playClicked(index, event) {
-    event.stopPropagation()
+    event.stopPropagation();
     setPlayerVisible(true);
     setSelectedSong(index);
   }
@@ -126,7 +130,7 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
                 <img src={Cd2} alt={''}></img>
               </h1>
               <ul id="mynftsFilterBar" role={"menubar"}>
-                {filters.map((filter, index) => (
+                {false && filters.map((filter, index) => (
                   <li 
                     key={"filter-" + index}
                     className="mynftsFilter"
@@ -141,7 +145,7 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
                   <li key={"nftCard-" + i} className="myNftsCard" style={((i+1) % cardFitCount) ? liMargin : null}>
                     <NftCard 
                       artistList={artistLists[getArtistIndex(item.token_id)]}
-                      openTransfer={() => openTransfer(item.token_id)} 
+                      openTransfer={() => openTransfer(item.contract, item.token_id)} 
                       index={(selectedPage*cardFitCount)+i} 
                       tokenId={item.token_id}
                       contract={item.contract}
