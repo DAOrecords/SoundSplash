@@ -1,0 +1,90 @@
+[
+  {
+    "contract": "nft.soundsplash.testnet",
+    "nft_id": "fono-root-0-0",
+    "token_id": "fono-root-0-0",
+    "owner_id": "optr.testnet",
+    "metadata": {
+      "title": "Under Achiever Interlude",
+      "description": "This is a classic Rare Vandal beat from the early days of his beat making on the Roland W30. Original disk image could not be found.",
+      "media": "QmXQx8HhofwhegdiUDkAv2XYuPoHsUpzC3a9JkTvacrkBz",
+      "media_hash": "OTU3MGQ4NGNmZDYyYzBhZjA4ZTBjMjI2NjhiOTA5M2FkMDRjNjRiNTRiOTIxOGJmYTkxMjFhZDcxZWU5NDM3OQ==",
+      "copies": null,
+      "issued_at": 1651554206157,
+      "expires_at": null,
+      "starts_at": null,
+      "updated_at": null,
+      "extra": "{\"music_cid\":\"QmP3XqRibqLHEM9Qey4dkkfbcDdpWUQo4ShZ4kW4oN8s3w\",\"music_hash\":\"Mjk4ZGUyNWZhNjEwNjEzOGQ0NDc2MmY2Y2I1ZjY2NDVlMWE4YmM4NjdiYWEwYzlmNWNhNzdlYzI2ZjM5NmNiNA==\",\"parent\":\"fono-root-0\",\"instance_nounce\":0,\"generation\":2,\"original_price\":\"400000000000000000000000\"}",
+      "reference": null,
+      "reference_hash": null
+    },
+    "approved_account_ids": {},
+    "royalty": {
+      "daorecords.testnet": 5000,
+      "vandal.testnet": 5000
+    },
+    "revenue": {
+      "daorecords.testnet": 1000,
+      "fono-root.optr.testnet": 9000
+    }
+  },
+  {
+    "contract": "nft.soundsplash.testnet",
+    "nft_id": "fono-root-10-3",
+    "token_id": "fono-root-10-3",
+    "owner_id": "optr.testnet",
+    "metadata": {
+      "title": "Clorofila En Tinta",
+      "description": "Clorofila En Tinta represents dignified life in all its expressions, putting together native stories immersed in family vibes. We made this song during a difficult situation in Venezuela, due to high levels of political and social violence, so with our music we hope to contribute to the encounter between the same people through what everyone can contribute positively to the community both in Venezuela and globally.",
+      "media": "Qmbc2a7fLMnM5keDA11XJhoF3n1RhQFE8P4P4FAoL61CVU",
+      "media_hash": "ODM3NWQ4MDY4MDE1MmExNzljYTAyZTFjYjU0MTQ5OGM3NjAwN2M2ZDZkMjQ4OWY1MmNlMjExMmRmMDQ0OWQ2NQ==",
+      "copies": null,
+      "issued_at": 1657120324421,
+      "expires_at": null,
+      "starts_at": null,
+      "updated_at": null,
+      "extra": "{\"music_cid\":\"QmSEjkpuF3FTfwdgpyqBeJwGBQuoV6oXMCtK3uQx5CyHoV\",\"music_hash\":\"YWM0ODBmMjMzMDVkMmJjNjRmZTg0YWEzNjEyMjMwYTJmM2UzNTJhNWYzMDIxZmEwNWI2NWNmOTczOGViOWY0OQ==\",\"parent\":\"fono-root-10-0\",\"instance_nounce\":0,\"generation\":3,\"original_price\":\"2000000000000000000000000\"}",
+      "reference": null,
+      "reference_hash": null
+    },
+    "approved_account_ids": {},
+    "royalty": {
+      "nft.soundsplash.testnet": 9000,
+      "daorecords.testnet": 1000
+    },
+    "revenue": {
+      "daorecords.testnet": 2000,
+      "versopesado.testnet": 8000
+    }
+  },
+  {
+    "contract": "nft.soundsplash.testnet",
+    "nft_id": "fono-root-6-10",
+    "token_id": "fono-root-6-10",
+    "owner_id": "optr.testnet",
+    "metadata": {
+      "title": "Spacesuit Apocalypse",
+      "description": "Spacesuit Apocalypse brings together the lyrical prowess of the Rare Vandal and the musical madness of DJ Lethal Skillz. Showcasing the attributes of a high ranking NearNaut, this NFT-themed collaboration represents a new generation of Web3 Hip Hop that stays true to its roots. Did you find the Easter Egg?\n",
+      "media": "Qmc4HDFzwzT8rbgVAHpYFoyjuv2sgM19NrByVxehCwgnHY",
+      "media_hash": "ZjFkYmUwM2EyYzM1YWUwMjY4ZTVlZDg5ODQzNmZjNDk5MjkxNTRkZDQwZmNlOGM4YWNlMzdmNzU5MjI2OTQxNQ==",
+      "copies": null,
+      "issued_at": 1654678170813,
+      "expires_at": null,
+      "starts_at": null,
+      "updated_at": null,
+      "extra": "{\"music_cid\":\"QmW8ooTrAXnkVpXvqGCxQVgLEQz6bmfN34tzG1gsUMZPau\",\"music_hash\":\"NmE5ZmNmNDUyZTM0N2NmNjVjYzdlYTEwNTMwYmI5NTlmYWQ5ZjY0ZDJhOTZhZmFlNzE4Mjc4YWRmYmFmYjA1Mw==\",\"parent\":\"fono-root-6-4\",\"instance_nounce\":1,\"generation\":4,\"original_price\":\"2000000000000000000000000\"}",
+      "reference": null,
+      "reference_hash": null
+    },
+    "approved_account_ids": {},
+    "royalty": {
+      "daorecords.testnet": 1000,
+      "fono-root.optr.testnet": 9000
+    },
+    "revenue": {
+      "djlethalskillz.testnet": 4000,
+      "vandal.testnet": 4000,
+      "daorecords.testnet": 2000
+    }
+  }
+]

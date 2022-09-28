@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import Cd1 from '../assets/cd1.png';
 import Cd2 from '../assets/cd2.png';
 import Player from './Player';
+import testMergeNftList from '../testMergeNftList.json';
 
 
 export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowWallet, showWallet}) {
@@ -60,12 +61,13 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
     }
     console.log("nftDetailsLists", nftDetailsLists)
 
-    const mergedNftList = nftList.map((nftItem, i) => {
+    const mergedNftList = testMergeNftList;
+    /*const mergedNftList = nftList.map((nftItem, i) => {
       const correspondingList = nftDetailsLists.filter((currentList) => currentList.contract === nftItem.contract)[0].nftDetailsList;
       const correspondingDetails = correspondingList.filter((currentNft) => currentNft.token_id === nftItem.nft_id)[0];
       const newObj = { ...nftItem, ...correspondingDetails };
       return newObj;
-    });
+    });*/
 
     console.log("mergedNftList: ", mergedNftList)
 
