@@ -3,6 +3,7 @@ import { utils } from 'near-api-js';
 import nearLogo from '../assets/ic_near.svg';
 import placeholder from '../assets/DaoLogo.svg';
 import playIcon from '../assets/play.svg';
+import { transferNft } from '../utils';
 
 
 export default function NftCard({playClicked, artistList, openTransfer, index, metadata, tokenId, contract}) {
@@ -28,8 +29,10 @@ export default function NftCard({playClicked, artistList, openTransfer, index, m
 
   function stakeClicked(event) {
     event.stopPropagation();
+    
     // Transfer NFT to staking contract
-    window.alert("Stake clicked. This is not implemented yet.");
+    console.log(`Transfering ${tokenId} to the staking contract...`);
+    transferNft(tokenId, "staking.daorecordsio.testnet");
   }
 
   function sellClicked(event) {

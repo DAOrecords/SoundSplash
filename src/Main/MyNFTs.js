@@ -15,12 +15,14 @@ import testMergeNftList from '../testMergeNftList.json';
 
 export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowWallet, showWallet}) {
   const [list, setList] = useState([]);
+  const [stakedList, setStakedList] = useState([]);
   const [nftPages, setNftPags] = useState([]);
   const [selectedPage, setSelectedPage] = useState(0);
   const [filters, setFilters] = useState(mockFilters);
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [playerVisible, setPlayerVisible] = useState(false);
   const [selectedSong, setSelectedSong] = useState(null);
+  const [displaySwitch, setDisplaySwitch] = useState(false);      // Normal / Staked
 
   const twoSide = 128;                                              // The 2 side margin is 64px + 64px = 128px
   const cardWidth = 301;                                            // Width of one NftCard
@@ -131,6 +133,12 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
                 <img src={Cd1} alt={''}></img>
                 <p>My NFTs</p>
                 <img src={Cd2} alt={''}></img>
+
+                <div>
+                  <label>This is a testing area for Staking</label>
+                  <button onClick={() => setDisplaySwitch(false)}>My NFTs</button>
+                  <button onClick={() => setDisplaySwitch(true)}>My Staked NFTs</button>
+                </div>
               </h1>
               <ul id="mynftsFilterBar" role={"menubar"}>
                 {false && filters.map((filter, index) => (
@@ -143,32 +151,42 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
                   </li>
                 ))}
               </ul>
-              <ul id="mynftsList">
-                {nftPages[selectedPage] && nftPages[selectedPage].map((item, i) => (
-                  <li key={"nftCard-" + i} className="myNftsCard" style={((i+1) % cardFitCount) ? liMargin : null}>
-                    <NftCard 
-                      artistList={artistLists[getArtistIndex(item.token_id)]}
-                      openTransfer={() => openTransfer(item.contract, item.token_id)} 
-                      index={(selectedPage*cardFitCount)+i} 
-                      tokenId={item.token_id}
-                      contract={item.contract}
-                      metadata={item.metadata}
-                      playClicked={playClicked}
-                    />
-                  </li>
-                ))}
-              </ul>
-              <ul id="mynftsPagination">
-                {nftPages && nftPages.map((_page, index) => (
-                  <li 
-                    key={"pageButton-" + index} 
-                    className={selectedPage === index ? "mynftsPageButton mynftsPageButtonSelected" : "mynftsPageButton"}
-                    onClick={() => setSelectedPage(index)}
-                  >
-                    {index+1}
-                  </li>
-                ))}
-              </ul>
+
+              {displaySwitch ? 
+                <>
+                  <p>Stake list, not implemented</p>
+                </>
+              : 
+                <>
+                  <ul id="mynftsList">
+                    {nftPages[selectedPage] && nftPages[selectedPage].map((item, i) => (
+                      <li key={"nftCard-" + i} className="myNftsCard" style={((i+1) % cardFitCount) ? liMargin : null}>
+                        <NftCard 
+                          artistList={artistLists[getArtistIndex(item.token_id)]}
+                          openTransfer={() => openTransfer(item.contract, item.token_id)} 
+                          index={(selectedPage*cardFitCount)+i} 
+                          tokenId={item.token_id}
+                          contract={item.contract}
+                          metadata={item.metadata}
+                          playClicked={playClicked}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                  <ul id="mynftsPagination">
+                    {nftPages && nftPages.map((_page, index) => (
+                      <li 
+                        key={"pageButton-" + index} 
+                        className={selectedPage === index ? "mynftsPageButton mynftsPageButtonSelected" : "mynftsPageButton"}
+                        onClick={() => setSelectedPage(index)}
+                      >
+                        {index+1}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              }
+
             </>
           :
             <h1 id="mynftsTitle">You don't have any NFTs yet!</h1>
