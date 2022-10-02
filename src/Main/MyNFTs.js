@@ -154,7 +154,7 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
 
               {displaySwitch ? 
                 <>
-                  <p>Stake list, not implemented</p>
+                  <p style={{color: "yellow"}}>Stake list, not implemented</p>
                 </>
               : 
                 <>
