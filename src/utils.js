@@ -2,7 +2,7 @@ import { connect, Contract, keyStores, WalletConnection, utils, KeyPair, provide
 import * as nearAPI from "near-api-js";
 const CryptoJS = require('crypto-js');
 
-const mode = 'mainnet';       // 'mainnet' || 'development'
+const mode = 'development';       // 'mainnet' || 'development'
 
 const provider = new providers.JsonRpcProvider(
   "https://rpc.mainnet.near.org"
@@ -217,6 +217,24 @@ export async function getListForAccount() {
     .then((response) => {
       console.log("Response: ", response);
       result = response.nft_list;
+    })
+    .catch((err) => console.error("Error while fetching list of NFTs for connected user!"));
+
+  return result;
+}
+
+export async function oldGetListForAccount() {
+  let result = [];
+  
+  const options = {
+    account_id: window.accountId,
+    limit: 10000,
+  }
+
+  await window.contract.nft_tokens_for_owner(options)
+    .then((response) => {
+      console.log("Response: ", response);
+      result = response;
     })
     .catch((err) => console.error("Error while fetching list of NFTs for connected user!"));
 

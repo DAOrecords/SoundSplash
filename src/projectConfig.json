@@ -1,5 +1,5 @@
 {
-  "test": "3",
-  "contractName": "nft.soundsplash.near",
-  "admin": "daorecords.near"
+  "test": "-1",
+  "contractName": "nft.soundsplash.testnet",
+  "admin": "optr.testnet"
 }

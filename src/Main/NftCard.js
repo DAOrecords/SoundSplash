@@ -28,6 +28,7 @@ export default function NftCard({playClicked, artistList, openTransfer, index, m
 
   function stakeClicked(event) {
     event.stopPropagation();
+    // Transfer NFT to staking contract
     window.alert("Stake clicked. This is not implemented yet.");
   }
 

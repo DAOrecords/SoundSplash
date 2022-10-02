@@ -3,7 +3,7 @@ import { ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from './Footer';
 import TopMenu from './TopMenu';
-import { getListForAccount, getNftDetailsForList } from '../utils';
+import { getListForAccount, getNftDetailsForList, oldGetListForAccount } from '../utils';
 import NftCard from './NftCard';
 import artistLists from '../artistLists.json';
 import { useNavigate } from 'react-router-dom';
@@ -61,7 +61,8 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
     }
     console.log("nftDetailsLists", nftDetailsLists)
 
-    const mergedNftList = testMergeNftList;
+//const mergedNftList = testMergeNftList;   //Testing the NFT Staking
+    const mergedNftList = await oldGetListForAccount();        // FOR NFT STAKING TEST
     /*const mergedNftList = nftList.map((nftItem, i) => {
       const correspondingList = nftDetailsLists.filter((currentList) => currentList.contract === nftItem.contract)[0].nftDetailsList;
       const correspondingDetails = correspondingList.filter((currentNft) => currentNft.token_id === nftItem.nft_id)[0];
