@@ -62,7 +62,7 @@ export async function initContract() {
   
   window.contract = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
     viewMethods: ['nft_metadata', 'nft_token', 'nft_tokens_for_owner', 'nft_tokens', 'get_crust_key', 'get_next_buyable', 'view_guestbook_entries', 'nft_token_details_for_list'],
-    changeMethods: ['new_default_meta', 'new', 'mint_root', 'set_crust_key', 'buy_nft_from_vault', 'transfer_nft', 'create_guestbook_entry', 'withdraw', 'copy'],
+    changeMethods: ['new_default_meta', 'new', 'mint_root', 'set_crust_key', 'buy_nft_from_vault', 'transfer_nft', 'create_guestbook_entry', 'withdraw', 'copy', 'nft_transfer_call'],
   })
 }
 
@@ -252,7 +252,29 @@ export async function transferNft(tokenId, receiverId) {
 
   await window.contract.transfer_nft(args, gas, amount)
     .then((msg) => { 
-      console.log("Success! (mint root)", msg); 
+      console.log("Success! (transferNft)", msg); 
+      success = true; 
+    })
+    .catch((err) => console.error("There was an error while transfering the token: ", err));
+  
+  return success;
+}
+
+export async function stakingTransfer(tokenId, receiverId) {
+  let success = false;
+  const args = {
+    token_id: tokenId,
+    receiver_id: receiverId,
+    approval_id: 0,
+    memo: "Test string",
+    msg: "msg String",
+  }
+  const gas = 100000000000000;
+  const amount = 1//utils.format.parseNearAmount("0.1");
+
+  await window.contract.nft_transfer_call(args, gas, amount)
+    .then((msg) => { 
+      console.log("Success! (stakingTransfer)", msg); 
       success = true; 
     })
     .catch((err) => console.error("There was an error while transfering the token: ", err));
