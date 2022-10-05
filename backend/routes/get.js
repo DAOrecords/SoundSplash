@@ -55,14 +55,42 @@ router.get('/thumbnail', async function (req, res) {
       .then((response) => {
         res.send({
           thumbnail: response.rows[0].thumbnail
-        })
+        });
       })
       .catch((error) => console.error("Error while querying thumbnail: ", error));
+
   } catch (error) {
     console.error("There was an error while trying to fetch the thumbnail: ", error);
     res.send({message: "There was an error while trying to fetch the thumbnail", error: error});
   }
 });
+
+// Get list of artists (collaborators) for a given contract and root_id
+// The response will be stringified JSON
+router.get('/collaborators', async function (req, res) {
+  try {
+    const rootID = req.query.root_id;
+    const contract = req.query.contract;
+    const uniqID = contract + rootID;
+
+    await pool.query('SELECT collab_list FROM collaborators WHERE uniq_id = $1', [uniqID])
+      .then((response) => {
+        res.send({
+          collab_list: response.rows[0].collab_list
+        });
+      })
+      .catch((error) => console.error("Error while querying collab_list: ", error));
+
+  } catch (error) {
+    console.error("There was an error while trying to get the list of collaborators: ", error);
+    res.send({
+      message: "There was an error while trying to get the list of collaborators", 
+      error: error, 
+      contract: req.query.contract, 
+      root_id: req.query.root_id
+    });
+  }
+})
 
 
 module.exports = router;
