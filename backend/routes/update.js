@@ -24,7 +24,7 @@ pool.connect();
 
 
 // This route will update the entries for a given user (will delete ownership, or add ownership of NFTs, based on response from contract)
-router.get('nfts_for_owner', async function (req, res) {
+router.get('/nfts_for_owner', async function (req, res) {
 
   console.log("Before try...catch...");
 
