@@ -54,9 +54,9 @@ router.get('/nfts_for_owner', async function (req, res) {
       const uniqID = req.query.contract + nft.token_id;
 
       const queryString = `INSERT INTO nfts_by_owner (uniq_id, owner_account, contract, nft_id) \
-          VALUES ('${uniqID}', '${req.query.owner}', '${req.query.contract}', '${nft.token_id}') \
+          VALUES ('${uniqID}', '${nft.owner_id}', '${req.query.contract}', '${nft.token_id}') \
           ON CONFLICT (uniq_id) DO UPDATE \
-            SET owner_account = '${req.query.owner}'`;
+            SET owner_account = '${nft.owner_id}'`;
       
       await pool.query(queryString)
         .then(() => console.log(`Inserted or updated ${nft.token_id} on contract ${req.query.contract}`))
@@ -71,5 +71,43 @@ router.get('/nfts_for_owner', async function (req, res) {
 });
 
 
+// This route will update a single NFT, input parameters are `contract` and `nft_id`
+router.get('/single_nft', async function (req, res) {
+  try {
+    const contractParams = {
+      token_list: [ req.query.nft_id ],
+    }
+
+    const contractParamsStringified = JSON.stringify(contractParams);
+    const readyBase64 = Buffer.from(contractParamsStringified).toString('base64');
+
+    const rawResult = await provider.query({
+      request_type: "call_function",
+      account_id: req.query.contract,
+      method_name: "nft_token_details_for_list",
+      args_base64: readyBase64,
+      finality: "optimistic",
+    });
+  
+    const response = JSON.parse(Buffer.from(rawResult.result).toString());
+    const nft = response[0];
+    const uniqID = req.query.contract + nft.token_id;
+
+    const queryString = `INSERT INTO nfts_by_owner (uniq_id, owner_account, contract, nft_id) \
+          VALUES ('${uniqID}', '${nft.owner_id}', '${req.query.contract}', '${nft.token_id}') \
+          ON CONFLICT (uniq_id) DO UPDATE \
+            SET owner_account = '${nft.owner_id}'`;
+      
+    await pool.query(queryString)
+      .then(() => console.log(`Inserted or updated ${nft.token_id} on contract ${req.query.contract}`))
+      .catch((err) => setImmediate(() => {
+        console.error("Insert error: ", err);
+      }));
+
+  } catch (error) {
+    console.error(`There was an error while trying to update entry for a single NFT for ${req.query.nft_id}, in the 'nfts_by_owner' table. Error message: `, error);
+    res.send(`There was an error while trying to update entry for a single NFT for ${req.query.nft_id}, in the 'nfts_by_owner' table. Error message: `, error);
+  }
+});
 
 module.exports = router;
