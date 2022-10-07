@@ -6,11 +6,15 @@ const uploadRoutes = require('./routes/upload.js');
 const fetchRoutes = require('./routes/fetch.js');
 const fillRoutes = require('./routes/fill.js');
 const getRoutes = require('./routes/get.js');
+const updateRoutes = require('./routes/update');
 
 const sslOptions = {
   key: fs.readFileSync('/etc/letsencrypt/live/daorecords.io/privkey.pem'),
   cert: fs.readFileSync('/etc/letsencrypt/live/daorecords.io/cert.pem')
 };
+
+const HTTP_PORT = 3000;
+const HTTPS_PORT = 8443;
 
 
 // CORS (we allow everything)
@@ -27,16 +31,17 @@ app.get('/', function (req, res) {
 app.use('/upload', uploadRoutes);
 app.use('/fetch', fetchRoutes);
 app.use('/fill', fillRoutes);
+app.use('/update', updateRoutes);
 app.use('/get', getRoutes);
 
 
 const sslApp = https.createServer(sslOptions, app);
 
-sslApp.listen(8443, function () {
-  console.log("(SSL) IPFS pinner app listening on port 8443!");
+sslApp.listen(HTTPS_PORT, function () {
+  console.log(`(SSL) IPFS pinner app listening on port ${HTTPS_PORT}!`);
 });
 
 
-app.listen(3000, function () {
-  console.log("IPFS pinner app listening on port 3000!");
+app.listen(HTTP_PORT, function () {
+  console.log(`IPFS pinner app listening on port ${HTTP_PORT}!`);
 });
