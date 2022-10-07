@@ -9,8 +9,8 @@ function uploadHandler(req, res, fileType) {
   }
 
   const file = req.files.myFile;
-  const filePath = process.cwd() + "/files/" + file.name;
-  const extensionName = path.extname(file.name);                   // Fetch the file extension
+  const filePath = process.cwd() + "/files/" + escape(file.name);
+  const extensionName = path.extname(escape(file.name));                   // Fetch the file extension
   if (fileType === "image") {
     if(!allowedImage.includes(extensionName)){
       return res.status(422).send("Invalid Image");
