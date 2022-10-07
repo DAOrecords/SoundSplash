@@ -8,10 +8,10 @@ const router = express.Router();
 router.get('/', function(req, res) {
   let result = null;
   const options = {
-    root: path.join('/root/FonoRoot/backend/')
+    root: path.join('/root/cache/')
   };
 
-  exec(`ipfs get ${req.query.cid}`, function (error, stdout, stderr) {
+  exec(`ipfs get ${req.query.cid} --output ${options.root}`, function (error, stdout, stderr) {
     if (error) {                                                                      // ipfs command gave an error
       console.log(`error: ${error.message}`);
       result = -1;
