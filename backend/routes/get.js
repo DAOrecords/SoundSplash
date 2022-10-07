@@ -90,7 +90,52 @@ router.get('/collaborators', async function (req, res) {
       root_id: req.query.root_id
     });
   }
-})
+});
 
+
+// Get list of NFT thumbnails, with all fields and with pagination
+router.get('/nft_list', async function (req, res) {
+  try {
+    const start = req.query.start || 0;
+    const pageSize = req.query.page_size || 10000000;
+
+    await pool.query(`SELECT * FROM nft_thumbnails LIMIT ${pageSize} OFFSET ${start}`)
+      .then((response) => {
+        res.send({
+          list: response.rows
+        })
+      })
+      .catch((err) => console.error("Error while querying list (in route nft_list): ", err));
+    
+  } catch (error) {
+    console.error("There was an error while trying to get paginated NFT list from the 'nft_thumbnails' table: ", error);
+    res.send({
+      message: "There was an error while trying to get paginated NFT list from the 'nft_thumbnails' table",
+      error: error,
+      start: start,
+      pageSize: pageSize
+    });
+  }
+});
+
+
+// Get number of entries in thumbnails table (returns a number)
+router.get('/nft_list_length', async function (_req, res) {
+  try {
+    await pool.query("SELECT null FROM nft_thumbnails")
+      .then((response) => {
+        res.send({
+          nft_count: response.rowCount
+        });
+      })
+      .catch((err) => console.error("There was an error while querying thumbnails (nft_list_length): ", err));
+  } catch (error) {
+    console.error("There was an error while trying to get the table length from 'nft_thumbnails: ", error);
+    res.send({
+      message: "There was an error while trying to get the table length from 'nft_thumbnails",
+      error: error
+    })
+  }
+});
 
 module.exports = router;
