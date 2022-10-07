@@ -57,6 +57,22 @@ router.get('/nfts_for_owner', async function (req, res) {
 
     console.log("Response from NEAR: ", response);
 
+    response.map(async (nft) => {
+      const uniqID = req.query.contract + nft.token_id;
+
+      const queryString = `INSERT INTO nfts_by_owner (uniq_id, owner_account, contract, nft_id) \
+          VALUES ('${uniqID}', '${req.query.owner}', '${req.query.contract}', '${nft.token_id}') \
+          ON CONFLICT (uniq_id) DO UPDATE \
+            SET owner_account = '${req.query.owner}'`;
+      
+      await pool.query(queryString)
+        .then(() => console.log(`Inserted or updated ${nft.token_id} on contract ${req.query.contract}`))
+        .catch((err) => setImmediate(() => {
+          console.error("Insert error: ", err);
+        }));
+    });
+
+
   } catch (error) {
     console.error("There was an error while trying to fetch the nft tokens to update the 'nfts_by_owner' table: ", error);
     res.send("There was an error while trying to fetch the nft tokens to update the 'nfts_by_owner' table: ", error);
