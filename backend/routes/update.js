@@ -26,8 +26,10 @@ pool.connect();
 // This route will update the entries for a given user (will delete ownership, or add ownership of NFTs, based on response from contract)
 router.get('nfts_for_owner', async function (req, res) {
 
+  console.log("Before try...catch...");
 
   try {
+    console.log("Before obj creation");
     const contractParams = {
       account_id: req.query.owner,
       from_index: "0",
@@ -36,6 +38,7 @@ router.get('nfts_for_owner', async function (req, res) {
 
     const contractParamsStringified = JSON.stringify(contractParams);
     const readyBase64 = Buffer.from(contractParamsStringified).toString('base64');
+    console.log("Base 64 is ready: ", readyBase64);
 
     const rawResult = await provider.query({
       request_type: "call_function",
@@ -52,7 +55,7 @@ router.get('nfts_for_owner', async function (req, res) {
       At this point, we should probably request the list of NFTs with pagination. \
     ");
 
-
+    console.log("Response from NEAR: ", response);
 
   } catch (error) {
     console.error("There was an error while trying to fetch the nft tokens to update the 'nfts_by_owner' table: ", error);
