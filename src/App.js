@@ -111,7 +111,7 @@ export default function App() {
         <Route 
           exact
           path='/'
-          element={<Navigate replace to="/weektwelve" />}
+          element={<Navigate replace to="/landing" />}
         />
         <Route 
           exact

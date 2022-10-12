@@ -42,8 +42,33 @@ export default function Landing({newAction, openGuestBook, setGuestBook, setShow
     marginRight: `${cardGap}px`
   }
 
+  let navigate = useNavigate();
 
   useEffect(async () => {
+    const urlParams = window.location.search;
+    const urlObj = new URLSearchParams(document.location.search);
+    window.history.pushState({}, document.title, "/" + "");
+    if (urlParams.includes('errorCode')) {
+      newAction({
+        errorMsg: "There was an error while processing the transaction!", errorMsgDesc: urlObj.get('errorCode'),
+      }); 
+    } else if (urlParams.includes('transactionHashes')) {
+      
+      console.log("urlObj.get('contract'): ", urlObj.get('contract'))
+      await fetch(`https://daorecords.io:8443/update/nfts_for_owner?owner=${window.accountId}&contract=${urlObj.get('contract')}`)
+        .then((res) => res.json())
+        .then((response) => {
+          if (response.success) console.log("List of NFTs for user updated (server side)");
+          else console.error("Error while updating entries for user: ", response.error);
+        })
+        .catch((err) => console.error(`Error while updating the list of NFTs for owner ${window.accountId}!`, err));
+
+      navigate('/my-nfts');
+      newAction({
+        successMsg: "Success!", successMsgDesc: "You bought a new NFT!",
+      });
+    }
+    
     // We should use `start` and `pageSize` in the future
     const nftList = await getNftListWithThumbnails();
     const rootNftCount = await getNumberOfNfts();
@@ -89,7 +114,6 @@ export default function Landing({newAction, openGuestBook, setGuestBook, setShow
             return currentUniqId === searchedUniqId;
           });
           newPage[index] = { ...newPage[index], ...singleNft, loaded: true};
-          console.log("newPage", newPage)
         });
         setNftPages((prev) => {
           prev[selectedPage] = newPage;

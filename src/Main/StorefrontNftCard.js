@@ -23,6 +23,7 @@ export default function StorefrontNftCard({newAction, playClicked, artistList, i
     }
 
     const buyPromise = new Promise(async (resolve, reject) => {
+      window.history.pushState({}, document.title, "/" + `?contract=${contract}`);
       const buyResult = await buyNFTfromVault(contract, tokenId, extra.original_price);
       if (buyResult) {
         resolve("Buying the NFT was successul (message from promise)");
@@ -43,7 +44,7 @@ export default function StorefrontNftCard({newAction, playClicked, artistList, i
     <>
       <button className="nftCard">
         <div className="nftCardImageContainer">
-          <img src={picture} alt={'nft-image'}></img>
+          <img src={picture} alt={'nft-image'} loading={"lazy"}></img>
           <img src={playIcon} alt={'P'} className="nftCardPlay" onClick={(e) => playClicked(index, e)}></img>
         </div>
         <div className="nftCardInfo">

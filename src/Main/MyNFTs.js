@@ -44,6 +44,7 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
   let navigate = useNavigate();
 
   useEffect(async () => {
+    // Get the list of NFTs the user owns, from the server
     const nftList = await getListForAccount();
     console.log("nftList", nftList);
 
