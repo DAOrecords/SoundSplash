@@ -139,7 +139,8 @@ export async function getSeed() {
   }
 }
 
-export async function buyNFTfromVault(tokenId, price) {
+export async function buyNFTfromVault(contract, tokenId, price) {
+  window.contract.contractId = contract;
   const args = {
     token_id: tokenId,
   };
@@ -181,7 +182,7 @@ export async function getBuyableTokens() {
     .catch((err) => console.error(err))
     
     const nextNFTs = await Promise.all(rootIDs.map(async (id) => { // We get the next buyable NFT for each root (lowest generation)
-      const result = await getNextBuyableInstance(id);
+      const result = await getNextBuyableInstance(contractAccount, id);
       return result;
     }))
     const finalRes = nextNFTs.map((id) => inVault.find((nft) => {
@@ -191,17 +192,29 @@ export async function getBuyableTokens() {
     return finalRes;                                               // Results will be array of NFT objects
 }
 
-export async function getNextBuyableInstance(rootId) {
+export async function getNextBuyableInstance(contract, rootId) {
   let nextId = null;
   const args = {
     root_id: rootId
   }
 
-  await window.contract.get_next_buyable(args)
-    .then((result) => nextId = result)
-    .catch((err) => console.error(err));
+  try {
+    const stringObj = JSON.stringify(args);
+    const base64Obj = btoa(stringObj);
+   
+    const rawResult = await provider.query({
+      request_type: "call_function",
+      account_id: contract,
+      method_name: "get_next_buyable",
+      args_base64: base64Obj,
+      finality: "optimistic",
+    });
 
-  return nextId;
+    nextId = JSON.parse(Buffer.from(rawResult.result).toString());
+    return nextId;
+  } catch (error) {
+    console.error("There was an error while trying to get the id of the next buyable NFT: ", error);
+  }
 }
 
 export async function getListForAccount() {
@@ -218,7 +231,35 @@ export async function getListForAccount() {
       console.log("Response: ", response);
       result = response.nft_list;
     })
-    .catch((err) => console.error("Error while fetching list of NFTs for connected user!"));
+    .catch((err) => console.error("Error while fetching list of NFTs for connected user! ", err));
+
+  return result;
+}
+
+export async function getNftListWithThumbnails(start, pageSize) {
+  // We don't use start and pageSize yet
+
+  let result = [];
+
+  await fetch("https://daorecords.io:8443/get/nft_list")
+    .then((res) => res.json())
+    .then((response) => {
+      result = response.list;
+    })
+    .catch((err) => console.error("Error while fetching nft list from server! ", err));
+
+    return result;
+}
+
+export async function getNumberOfNfts() {
+  let result = null;
+
+  await fetch("https://daorecords.io:8443/get/nft_list_length")
+    .then((res) => res.json())
+    .then((response) => {
+      result = response.nft_count;
+    })
+    .catch((err) => console.error("There was an error while trying to get the total number of root nfts: ", err));
 
   return result;
 }
@@ -280,7 +321,7 @@ export async function getNftDetailsForList(contract, list) {
   const params = {
     token_list: list
   }
-console.log(contract);console.log(list)
+
   const stringObj = JSON.stringify(params);
   const base64Obj = btoa(stringObj);
  

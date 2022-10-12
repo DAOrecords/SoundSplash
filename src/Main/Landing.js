@@ -3,18 +3,19 @@ import { ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from './Footer';
 import TopMenu from './TopMenu';
-import { getListForAccount, getNftDetailsForList } from '../utils';
-import NftCard from './NftCard';
+import { getListForAccount, getNextBuyableInstance, getNftDetailsForList, getNftListWithThumbnails, getNumberOfNfts } from '../utils';
 import artistLists from '../artistLists.json';
 import { useNavigate } from 'react-router-dom';
 import Cd1 from '../assets/cd1.png';
 import Cd2 from '../assets/cd2.png';
 import Player from './Player';
+import StorefrontNftCard from './StorefrontNftCard';
 
 
-export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowWallet, showWallet}) {
+export default function Landing({newAction, openGuestBook, setGuestBook, setShowWallet, showWallet}) {
   const [list, setList] = useState([]);
   const [nftPages, setNftPages] = useState([]);
+  const [renderNonce, setRenderNonce] = useState(-1);
   const [selectedPage, setSelectedPage] = useState(0);
   const [filters, setFilters] = useState(mockFilters);
   const [selectedFilter, setSelectedFilter] = useState(null);
@@ -40,72 +41,68 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
   const liMargin = {
     marginRight: `${cardGap}px`
   }
-  
-  let navigate = useNavigate();
+
 
   useEffect(async () => {
-    const nftList = await getListForAccount();
-    console.log("nftList", nftList);
-
-    let nftDetailsLists = nftList.filter((nftItem, index) =>                                  // This will contain multiple lists, each element of the array is a contract
-                            nftList.findIndex(nftObj => nftObj.contract === nftItem.contract) === index)
-                                    .map((item) => {return { contract: item.contract, nftDetailsList: null }});
-
-    for (let i = 0; i < nftDetailsLists.length; i++) {
-      const contract = nftDetailsLists[i].contract;
-      const list = nftList.filter((nft) => nft.contract === contract)
-                          .map(nft => nft.nft_id);
-
-      nftDetailsLists[i].nftDetailsList = await getNftDetailsForList(contract, list);
-    }
-    console.log("nftDetailsLists", nftDetailsLists)
-
-    const mergedNftList = nftList.map((nftItem, i) => {
-      const correspondingList = nftDetailsLists.filter((currentList) => currentList.contract === nftItem.contract)[0].nftDetailsList;
-      const correspondingDetails = correspondingList.filter((currentNft) => currentNft.token_id === nftItem.nft_id)[0];
-      const newObj = { ...nftItem, ...correspondingDetails };
-      return newObj;
-    });
-
-    console.log("mergedNftList: ", mergedNftList)
+    // We should use `start` and `pageSize` in the future
+    const nftList = await getNftListWithThumbnails();
+    const rootNftCount = await getNumberOfNfts();
 
     let nPages = [];
     let page = 0;
-    for (let i = 0; i < mergedNftList.length; i = i + cardFitCount) {
-      nPages[page] = mergedNftList.slice(i, i+cardFitCount);
+    for (let i = 0; i < nftList.length; i = i + cardFitCount) {
+      nPages[page] = nftList.slice(i, i+cardFitCount);
       page++;
     }
-    console.log("nftPages: ", nPages);
-
-
-    setNftPages(nPages);
-    setList(mergedNftList);
+    
+    setList(nftList);
+    setNftPages(() => {
+      return Object.assign([], nPages);
+    });
   }, []);
+  
+  useEffect(async () => {
+    if (selectedPage === null) return;
+    if (renderNonce <= 0) {
+      // Trying to hack around the state update problem. 
+      // If renderNonce is smaller then 0, nftPages is not loaded, if it is bigger then 1, data from blockchain is being loaded, or loaded
+      if (nftPages.length > 0) setRenderNonce(3);
+      else {
+        setTimeout(() => setRenderNonce(renderNonce-1), 1000);
+      }
+      return;
+    } else {
+      if (nftPages[selectedPage][0].loaded) {
+        console.log(`All data loaded (page ${selectedPage}) `, renderNonce);
+      } else {
+        let newPage = nftPages[selectedPage];
+        const oldPage = newPage;
+        oldPage.map(async (sqlNft) => {
+          const next = await getNextBuyableInstance(sqlNft.contract, sqlNft.root_nft);
+          const responseList = await getNftDetailsForList(sqlNft.contract, [ next ]);
+          // Do artistList here
+          const singleNft = responseList[0];
+          
+          const index = newPage.findIndex((current) => {
+            const currentUniqId = current.contract + current.root_nft;
+            const searchedUniqId = sqlNft.contract + sqlNft.root_nft;
+            return currentUniqId === searchedUniqId;
+          });
+          newPage[index] = { ...newPage[index], ...singleNft, loaded: true};
+          console.log("newPage", newPage)
+        });
+        setNftPages((prev) => {
+          prev[selectedPage] = newPage;
+          return Object.assign([], prev);
+        });
+        setTimeout(() => setRenderNonce(renderNonce+1), 1000);
+      }
+    };
+    
+    
+  }, [selectedPage, renderNonce]);
 
 
-  function openTransfer(contract, tokenId) {
-    navigate('/contract/nfts/' + contract + '/' + tokenId);
-  }
-
-  function getArtistIndex(tokenId) {
-    console.log("tokenId inside getArtistIndex: ", tokenId);
-
-    /** We will manually need to update this list throughout the SoundSplash */
-    if (tokenId.includes('fono-root-0-') || tokenId === 'fono-root-0') return 2;
-    if (tokenId.includes('fono-root-2-') || tokenId === 'fono-root-2') return 0;
-    if (tokenId.includes('fono-root-3-') || tokenId === 'fono-root-3') return 1;
-    if (tokenId.includes('fono-root-4-') || tokenId === 'fono-root-4') return 3;
-    if (tokenId.includes('fono-root-5-') || tokenId === 'fono-root-5') return 4;
-    if (tokenId.includes('fono-root-6-') || tokenId === 'fono-root-6') return 5;
-    if (tokenId.includes('fono-root-7-') || tokenId === 'fono-root-7') return 6;
-    if (tokenId.includes('fono-root-8-') || tokenId === 'fono-root-8') return 7;
-    if (tokenId.includes('fono-root-9-') || tokenId === 'fono-root-9') return 8;
-    if (tokenId.includes('fono-root-10-') || tokenId === 'fono-root-10') return 9;
-    if (tokenId.includes('fono-root-11-') || tokenId === 'fono-root-11') return 11;
-    if (tokenId.includes('fono-root-12-') || tokenId === 'fono-root-11') return 12;
-    if (tokenId.includes('fono-root-13-') || tokenId === 'fono-root-11') return 13;
-    return 10;
-  }
 
   function playClicked(index, event) {
     event.stopPropagation();
@@ -113,20 +110,21 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
     setSelectedSong(index);
   }
 
+
   return (
     <>
       {openGuestBook && ( <GuestBook openModal={openGuestBook} newAction={newAction} setOpenModal={setGuestBook} /> )}
       <ToastContainer hideProgressBar={true} position="bottom-right" transition={Slide} />
-      
+
       <div id="mynftsBackground">
         <TopMenu setShowWallet={setShowWallet} showWallet={showWallet} />
-
+        
         <main id="mynftsGrid">
-          {nftPages[selectedPage] ? 
+          {selectedPage !== null ? 
             <>
               <h1 id="mynftsTitle">
                 <img src={Cd1} alt={''}></img>
-                <p>My NFTs</p>
+                <p>Store</p>
                 <img src={Cd2} alt={''}></img>
               </h1>
               <ul id="mynftsFilterBar" role={"menubar"}>
@@ -142,12 +140,14 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
               </ul>
               <ul id="mynftsList">
                 {nftPages[selectedPage] && nftPages[selectedPage].map((item, i) => (
-                  <li key={"nftCard-" + i} className="myNftsCard" style={((i+1) % cardFitCount) ? liMargin : null}>
-                    <NftCard 
-                      artistList={artistLists[getArtistIndex(item.token_id)]}
+                  <li key={"nftCard-li-" + i + "-" + renderNonce} className="myNftsCard" style={((i+1) % cardFitCount) ? liMargin : null}>
+                    <StorefrontNftCard
+                      key={"nftCard-" + i + "-" + renderNonce}
                       openTransfer={() => openTransfer(item.contract, item.token_id)} 
                       index={(selectedPage*cardFitCount)+i} 
+                      picture={"data:image/webp;base64," + item.thumbnail}
                       tokenId={item.token_id}
+                      newAction={newAction}
                       contract={item.contract}
                       metadata={item.metadata}
                       playClicked={playClicked}
@@ -168,7 +168,7 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
               </ul>
             </>
           :
-            <h1 id="mynftsTitle">You don't have any NFTs yet!</h1>
+            <h1 id="mynftsTitle">Loading NFTs...</h1>
           }  
         </main>
 
@@ -186,6 +186,7 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
     </>
   );
 }
+
 
 const mockFilters = [
   {

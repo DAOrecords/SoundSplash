@@ -29,6 +29,7 @@ import ReactDraggableOnly from './Experiment/ReactDraggableOnly';
 import ReactDraggableGridSize from './Experiment/ReactDraggableGridSize';
 import ReactDraggableFont from './Experiment/ReactDraggableFont';
 import Troaco from './Main/Troaco/Troaco';
+import Landing from './Main/Landing';
 
 
 export default function App() {
@@ -145,6 +146,13 @@ export default function App() {
         <Route
           path='/contract/nfts/:contract/:tokenId'
           element={<TransferModal newAction={newAction} />}
+        />
+        <Route 
+          exact
+          path='landing'
+          element={
+            <Landing newAction={newAction} openGuestBook={openGuestBook} setGuestBook={setGuestBook} setShowWallet={setShowWallet} showWallet={showWallet} />
+          }
         />
         {/** The 12 SoundSplash NFT Landing Pages */}
         <Route 
