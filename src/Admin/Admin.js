@@ -130,7 +130,6 @@ export default function Admin({newAction, vault}) {
     /**TEST */ console.log("creatorSplit: ", revenuePercent); console.log("foreverRoyalties: ", royalties);
     /**TEST */ console.log("artistList: ", artistList);
     /**TEST */ console.log("artistList JSON: ", JSON.stringify(JSON.stringify(artistList)));
-    /**TEST */ return;
 
     const percentTotal = royalties.reduce((total, item) => {
       return total + item.percent;
@@ -180,6 +179,9 @@ export default function Admin({newAction, vault}) {
     
 
     const mintPromise = new Promise(async (resolve, reject) => {
+      // Save artistList, this is half-manual
+      const escapedName = escape(title);
+      fetch(`https://daorecords.io:8443/upload/artist_list?list=${JSON.stringify(JSON.stringify(artistList))}&name=${escapedName}`);
       const mintResult = await mintRootNFT(title, desc, imageCID, imageHash, musicCID, musicHash, price, foreverTable, revenueTable);
       if (mintResult) {
         resolve("The mint was successfull (message from promise)");
