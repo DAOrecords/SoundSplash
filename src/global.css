@@ -442,11 +442,13 @@ main {
   position: absolute;
   font-family: neue-haas-grotesk-display;
   background: white;
+  color: #222222;
+  border: 2px solid #FFAD0D;
   border-radius: 2px;
   font-size: 12px;
   top: 58px;
   padding: 16px;
-  right: 100px;
+  right: 66px;
   width: 183px;
   height: 99px;
   text-transform: uppercase;
