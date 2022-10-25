@@ -819,17 +819,20 @@ main {
 .nftTitleInput {
   width: 99%;
   height: var(--small-input);
+  border-radius: 5px;
 }
 
 .descInput {
   width: 99%;
   height: var(--large-input);
+  border-radius: 5px;
 }
 
 .priceInput {
   width: 99%;
   height: 28px;
   background: white url('./assets/logo-black.svg') right no-repeat;
+  border-radius: 5px;
 }
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
@@ -860,6 +863,7 @@ input[type=number] {
   margin-right: 8px;
   margin-bottom: 8px;
   height: 28px;
+  border-radius: 5px;
 }
 .artistListRemove {
   justify-self: end;
@@ -884,6 +888,7 @@ input[type=number] {
 .royaltyList div input {
   width: 100%;
   height: 28px;
+  border-radius: 5px;
 }
 .royaltyList div label {
   margin-bottom: 16px;
@@ -917,6 +922,7 @@ input[type=number] {
   padding: var(--spacing-3);
   box-shadow: 0 0 6px rgba(35, 173, 278, 1);
   background-color: var(--box-color);
+  border-radius: 5px;
 }
 .previewImage {
   width: 100%;
@@ -958,6 +964,7 @@ input[type=number] {
   border-style: dashed;
   border-radius: 2px;
   text-align: center;
+  border-radius: 15px;
 }
 .imageDropZoneActive {
   background-color: white;
