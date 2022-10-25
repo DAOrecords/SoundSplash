@@ -146,7 +146,7 @@ export default function Landing({newAction, openGuestBook, setGuestBook, setShow
         <main id="mynftsGrid">
           {selectedPage !== null ? 
             <>
-              <h1 id="mynftsTitle">
+              <h1 id="mainTitle">
                 <img src={Cd1} alt={''}></img>
                 <p>Store</p>
                 <img src={Cd2} alt={''}></img>
@@ -192,7 +192,7 @@ export default function Landing({newAction, openGuestBook, setGuestBook, setShow
               </ul>
             </>
           :
-            <h1 id="mynftsTitle">Loading NFTs...</h1>
+            <h1 id="mainTitle">Loading NFTs...</h1>
           }  
         </main>
 

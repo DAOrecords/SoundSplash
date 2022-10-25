@@ -392,7 +392,6 @@ main {
 }
 #adminMain {
   overflow: scroll;
-  background: var(--main-bg);
   padding: var(--spacing-5);
 }
 
@@ -650,7 +649,7 @@ main {
   background: unset;
   overflow: unset;
 }
-#mynftsTitle {
+#mainTitle {
   font-family: GeneralSans;
   font-style: normal;
   font-weight: 600;
@@ -663,8 +662,9 @@ main {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
 }
-#mynftsTitle img {
+#mainTitle img {
   width: 45px;
   height: 45px;
   margin-left: 16px;
@@ -806,10 +806,14 @@ main {
   display: block;
   margin-top: var(--spacing-4);
   margin-bottom: var(--spacing-2);
+  font-family: GeneralSans;
+  font-style: normal;
   font-weight: 600;
-  font-size: 18px;
-  line-height: 21px;
-  color: #000000;
+  font-size: 20px;
+  line-height: 160%;
+  color: #FFFFFF;
+  margin-top: 16px;
+  margin-bottom: 0px;
 }
 
 .nftTitleInput {

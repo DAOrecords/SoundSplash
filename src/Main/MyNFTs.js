@@ -125,7 +125,7 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
         <main id="mynftsGrid">
           {nftPages[selectedPage] ? 
             <>
-              <h1 id="mynftsTitle">
+              <h1 id="mainTitle">
                 <img src={Cd1} alt={''}></img>
                 <p>My NFTs</p>
                 <img src={Cd2} alt={''}></img>
@@ -169,7 +169,7 @@ export default function MyNFTs({newAction, openGuestBook, setGuestBook, setShowW
               </ul>
             </>
           :
-            <h1 id="mynftsTitle">You don't have any NFTs yet!</h1>
+            <h1 id="mainTitle">You don't have any NFTs yet!</h1>
           }  
         </main>
 

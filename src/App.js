@@ -4,8 +4,8 @@ import { ToastContainer, toast, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Admin from './Admin/Admin';
 import SplashLanding from './Main/SplashLanding';
-import AdminTopMenu from './Admin/TopMenu';
-import AdminFooter from './Admin/Footer';
+import TopMenu from './Main/TopMenu';
+import Footer from './Main/Footer';
 import Message from './Activity/Message';
 import Pending from './Activity/Pending';
 import Ok from './Activity/Ok';
@@ -129,10 +129,10 @@ export default function App() {
           element={
             <>
               <ToastContainer hideProgressBar={true} position="bottom-right" transition={Slide} />
-              <AdminTopMenu setShowActivity={setShowActivity} showActivity={showActivity} actionHistory={actionHistory} 
+              <TopMenu setShowActivity={setShowActivity} showActivity={showActivity} actionHistory={actionHistory} 
                 setShowWallet={setShowWallet} showWallet={showWallet} />
               <Admin newAction={newAction} vault={configObj.contractName} />
-              <AdminFooter />
+              <Footer />
             </>
           }
         />
@@ -296,10 +296,10 @@ export default function App() {
           element={
             <>
               <ToastContainer hideProgressBar={true} position="bottom-right" transition={Slide} />
-              <AdminTopMenu setShowActivity={setShowActivity} showActivity={showActivity} actionHistory={actionHistory} 
+              <TopMenu setShowActivity={setShowActivity} showActivity={showActivity} actionHistory={actionHistory} 
                 setShowWallet={setShowWallet} showWallet={showWallet} />
               <Withdraw />
-              <AdminFooter />
+              <Footer />
             </>
           }
         />
