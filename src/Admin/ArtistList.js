@@ -29,8 +29,11 @@ export default function ArtistList({artistList, setArtistList}) {
     })
   }
 
-  function removeArtist() {
-
+  function removeArtist(index) {
+    setArtistList((prevState) => {
+      prevState.splice(index, 1);
+      return Object.assign([], prevState);
+    })
   }
 
   console.log("Artist List: ", artistList);

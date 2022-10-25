@@ -128,6 +128,9 @@ export default function Admin({newAction, vault}) {
 
   function createNFT() {
     /**TEST */ console.log("creatorSplit: ", revenuePercent); console.log("foreverRoyalties: ", royalties);
+    /**TEST */ console.log("artistList: ", artistList);
+    /**TEST */ console.log("artistList JSON: ", JSON.stringify(JSON.stringify(artistList)));
+    /**TEST */ return;
 
     const percentTotal = royalties.reduce((total, item) => {
       return total + item.percent;
