@@ -299,6 +299,7 @@ export default function Admin({newAction, vault}) {
 
           <PreviewBox title={title} image={image} music={music} price={price}/>
         </div>
+
         <div className="buttonContainer">
           <button onClick={createNFT} className="mainButton">Mint</button>
         </div>
