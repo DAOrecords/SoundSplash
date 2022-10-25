@@ -36,7 +36,6 @@ export default function ArtistList({artistList, setArtistList}) {
     })
   }
 
-  console.log("Artist List: ", artistList);
 
   return (
     <>
