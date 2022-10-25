@@ -8,9 +8,7 @@ export default function Footer() {
   return (
     <footer>
       <div className="logo"></div>
-      <GitHub />
-      <Twitter />
-      <Telegram />
+      
     </footer>
   )
 }

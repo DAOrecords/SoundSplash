@@ -31,8 +31,8 @@ export default function Admin({newAction, vault}) {
   const [musicHash, setMusicHash] = useState("");
 
   // For the royalties
-  const [revenuePercent, setRevenuePercent] = useState(1000);                    // Max is 10000, current value would be 10%
-  const [royalties, setRoyalties] = useState([]);                                // Will contain objects of the format { account: "alice.near", percent: 2000 }
+  const royaltyPercent = 1000;                                                   // Max is 10000, current value would be 10%
+  const [revenues, setRevenues] = useState([]);                                  // Will contain objects of the format { account: "alice.near", percent: 2000 }
 
   // Artist List
   const [artistList, setArtistList] = useState([]);                              // Array of artist objects
@@ -127,11 +127,11 @@ export default function Admin({newAction, vault}) {
   }
 
   function createNFT() {
-    /**TEST */ console.log("creatorSplit: ", revenuePercent); console.log("foreverRoyalties: ", royalties);
+    /**TEST */ console.log("creatorSplit: ", royaltyPercent); console.log("foreverRoyalties: ", revenues);
     /**TEST */ console.log("artistList: ", artistList);
     /**TEST */ console.log("artistList JSON: ", JSON.stringify(JSON.stringify(artistList)));
 
-    const percentTotal = royalties.reduce((total, item) => {
+    const percentTotal = revenues.reduce((total, item) => {
       return total + item.percent;
     }, 0);
     console.log("percentTotal: ", percentTotal);
@@ -168,12 +168,12 @@ export default function Admin({newAction, vault}) {
     }
     
     const revenueTable = {
-      [window.accountId]: revenuePercent,
-      [vault]: calculateVaultPercent(revenuePercent)
+      [window.accountId]: royaltyPercent,
+      [vault]: calculateVaultPercent(royaltyPercent)
     };
 
     const foreverTable = {};
-    royalties.map((royaltyEntry) => {
+    revenues.map((royaltyEntry) => {
       foreverTable[royaltyEntry.account] = royaltyEntry.percent
     });
     
@@ -201,13 +201,8 @@ export default function Admin({newAction, vault}) {
     return 10000 - creatorSplit;
   }
 
-  function changeRevenuePercent(newValue) {
-    if (newValue > 100) return;
-    setRevenuePercent(Math.ceil(newValue*100));
-  }
-
   function addNewRoyaltyEntry() {
-    setRoyalties((state) => {
+    setRevenues((state) => {
       state.push({
         account: "",
         percent: 0,
@@ -217,14 +212,14 @@ export default function Admin({newAction, vault}) {
   }
 
   function removeRoyaltyEntry(index) {
-    setRoyalties((state) => {
+    setRevenues((state) => {
       state.splice(index, 1);
       return Object.assign([], state);
     })
   }
 
   function changeRoyaltyAccount(index, newName) {
-    setRoyalties((state) => {
+    setRevenues((state) => {
       state[index].account = newName;
       return Object.assign([], state);
     })
@@ -232,7 +227,7 @@ export default function Admin({newAction, vault}) {
 
   function changeRoyaltyPercent(index, newPercent) {
     if (newPercent > 100) return;
-    setRoyalties((state) => {
+    setRevenues((state) => {
       state[index].percent = Math.ceil(newPercent*100);
       return Object.assign([], state);
     })
@@ -243,72 +238,68 @@ export default function Admin({newAction, vault}) {
 
   return (
     <main id="adminMain">
-      <div id="adminMain" className={"adminMain"}>
-        <h1 className="title">Mint NFT</h1>
+      <h1 className="title">Mint NFT</h1>
 
-        <div id="adminFlexBox" className="adminFlexBox">
-          <div id="nft-details" className="nft-details">
-            <label className="fieldName">Upload Media</label>
-              {!(imageReady || musicReady) ? 
-                <MediaDropzone onDrop={(files) => onDropMedia(files)} accept={"image/*, audio/*"} />
-                : (
-                  <>
-                  {imageReady ? 
-                    <p className="smallUploader">{image.name}<button onClick={() => setImageReady(false)}>X</button></p> 
-                  : 
-                    <SmallUploader onDrop={(files) => onDropMedia(files)} accept={"image/*"} /> }
-                  {musicReady ? 
-                    <p className="smallUploader">{music.name}<button onClick={() => setMusicReady(false)}>X</button></p>
-                  : 
-                    <SmallUploader onDrop={(files) => onDropMedia(files)} accept={"audio/*"} />}
-                  </>
-                )
-              }
-              <div className="infoDiv">
-                <img src={infoLogo}></img>
-                <p>{"Supported formats .jpg .png and .mp3"}</p>
-              </div>
-            <label className="fieldName">Title</label>
-            <input type={"text"} value={title} className="nftTitleInput" onChange={(e) => setTitle(e.target.value)} />
-            <label className="fieldName">Description</label>
-            <textarea value={desc} className="descInput" onChange={(e) => setDesc(e.target.value)} />
-            
-            <label className="fieldName">Royalty percentage</label>
-            <input className="nftTitleInput" type={"number"} min={0} value={revenuePercent / 100} onChange={(e) => changeRevenuePercent(e.target.value)}></input>
-            <label className="fieldName">Creator split
-              <button className="royaltyButton" onClick={addNewRoyaltyEntry}>
-                <img src={plusButton} alt={'+'}></img>
-              </button>
-            </label>
-            <ul className="royaltyList">
-              {royalties.map((royalty, index) => (
-                <li className="royaltyElement" key={index}>
-                  <div>
-                    <label htmlFor="royaltyElementAddress" className="smallRoyaltyLabel">Address</label>
-                    <input id="royaltyElementAddress" type={"text"} value={royalty.account} onChange={(e) => changeRoyaltyAccount(index, e.target.value)}></input>
-                  </div>
-                  <div>
-                    <label htmlFor="royaltyElementPercent" className="smallRoyaltyLabel">Percentage</label>
-                    <input id="royaltyElementPercent" type={"number"} min={0} max={100} value={royalty.percent / 100} onChange={(e) => changeRoyaltyPercent(index, e.target.value)}></input>
-                  </div>
-                  <div>
-                    <label htmlFor="removeButton" className="placeholderLabel">X</label>
-                    <img id="removeButton" src={xButton} alt={'X'} onClick={() => removeRoyaltyEntry(index)}></img>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <ArtistList artistList={artistList} setArtistList={setArtistList} />
+      <div id="adminFlexBox" className="adminFlexBox">
+        <div id="nft-details" className="nft-details">
+          <label className="fieldName">Upload Media</label>
+            {!(imageReady || musicReady) ? 
+              <MediaDropzone onDrop={(files) => onDropMedia(files)} accept={"image/*, audio/*"} />
+              : (
+                <>
+                {imageReady ? 
+                  <p className="smallUploader">{image.name}<button onClick={() => setImageReady(false)}>X</button></p> 
+                : 
+                  <SmallUploader onDrop={(files) => onDropMedia(files)} accept={"image/*"} /> }
+                {musicReady ? 
+                  <p className="smallUploader">{music.name}<button onClick={() => setMusicReady(false)}>X</button></p>
+                : 
+                  <SmallUploader onDrop={(files) => onDropMedia(files)} accept={"audio/*"} />}
+                </>
+              )
+            }
+            <div className="infoDiv">
+              <img src={infoLogo}></img>
+              <p>{"Supported formats .jpg .png and .mp3"}</p>
+            </div>
+          <label className="fieldName">Title</label>
+          <input type={"text"} value={title} className="nftTitleInput" onChange={(e) => setTitle(e.target.value)} />
+          <label className="fieldName">Description</label>
+          <textarea value={desc} className="descInput" onChange={(e) => setDesc(e.target.value)} />
+          
+          <label className="fieldName">Creator split
+            <button className="royaltyButton" onClick={addNewRoyaltyEntry}>
+              <img src={plusButton} alt={'+'}></img>
+            </button>
+          </label>
+          <ul className="royaltyList">
+            {revenues.map((royalty, index) => (
+              <li className="royaltyElement" key={index}>
+                <div>
+                  <label htmlFor="royaltyElementAddress" className="smallRoyaltyLabel">Address</label>
+                  <input id="royaltyElementAddress" type={"text"} value={royalty.account} onChange={(e) => changeRoyaltyAccount(index, e.target.value)}></input>
+                </div>
+                <div>
+                  <label htmlFor="royaltyElementPercent" className="smallRoyaltyLabel">Percentage</label>
+                  <input id="royaltyElementPercent" type={"number"} min={0} max={100} value={royalty.percent / 100} onChange={(e) => changeRoyaltyPercent(index, e.target.value)}></input>
+                </div>
+                <div className="revenueRemoveButtonContainer">
+                  <label htmlFor="removeButton" className="placeholderLabel">X</label>
+                  <img id="removeButton" src={xButton} alt={'X'} onClick={() => removeRoyaltyEntry(index)}></img>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <ArtistList artistList={artistList} setArtistList={setArtistList} />
 
-            <label className="fieldName">Price</label>
-            <input type={"number"} min={0} value={price} className="priceInput" onChange={(e) => setPrice(e.target.value)} />
-          </div>
-
-          <PreviewBox title={title} image={image} music={music} price={price}/>
+          <label className="fieldName">Price</label>
+          <input type={"number"} min={0} value={price} className="priceInput" onChange={(e) => setPrice(e.target.value)} />
         </div>
-        <div className="buttonContainer">
-          <button onClick={createNFT} className="mainButton">Mint</button>
-        </div>
+
+        <PreviewBox title={title} image={image} music={music} price={price}/>
+      </div>
+      <div className="buttonContainer">
+        <button onClick={createNFT} className="mainButton">Mint</button>
       </div>
     </main>
   )

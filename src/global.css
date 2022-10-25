@@ -393,11 +393,9 @@ main {
 #adminMain {
   overflow: scroll;
   background: var(--main-bg);
-}
-
-.adminMain {
   padding: var(--spacing-5);
 }
+
 
 .connectWallet {
   padding-top: var(--spacing-5);
@@ -501,6 +499,7 @@ main {
 #mainWalletButtonContainer {
   display: flex;
   justify-content: center;
+  margin-bottom: var(--spacing-5);
 }
 .guestText {
   margin-top: 20px;
@@ -903,6 +902,9 @@ input[type=number] {
 .smallRoyaltyLabel {
   display: block;
   font-size: 16px;
+}
+.revenueRemoveButtonContainer {
+  align-self: end;
 }
 
 
