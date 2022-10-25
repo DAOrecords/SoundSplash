@@ -10,6 +10,7 @@ import infoLogo from '../assets/info.svg';
 import ConnectWallet from './ConnectWallet';
 import xButton from '../assets/xButton.svg';
 import plusButton from '../assets/plusButton.svg';
+import ArtistList from './ArtistList';
 
 
 export default function Admin({newAction, vault}) {  
@@ -32,6 +33,9 @@ export default function Admin({newAction, vault}) {
   // For the royalties
   const [revenuePercent, setRevenuePercent] = useState(1000);                    // Max is 10000, current value would be 10%
   const [royalties, setRoyalties] = useState([]);                                // Will contain objects of the format { account: "alice.near", percent: 2000 }
+
+  // Artist List
+  const [artistList, setArtistList] = useState([]);                              // Array of artist objects
   
 
   useEffect(async () => {
@@ -289,6 +293,7 @@ export default function Admin({newAction, vault}) {
                 </li>
               ))}
             </ul>
+            <ArtistList artistList={artistList} setArtistList={setArtistList} />
 
             <label className="fieldName">Price</label>
             <input type={"number"} min={0} value={price} className="priceInput" onChange={(e) => setPrice(e.target.value)} />

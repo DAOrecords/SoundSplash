@@ -839,6 +839,29 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+.artistList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.artistListElement {
+  display: flex;
+}
+.artistListInputGroup {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+.artistListInput {
+  width: 48%;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  height: 28px;
+}
+.artistListRemove {
+  justify-self: end;
+}
+
 .royaltyList {
   list-style: none;
   padding: 0;
@@ -866,6 +889,8 @@ input[type=number] {
 .placeholderLabel {
   display: block;
   visibility: hidden;
+  width: 0;
+  height: 0;
 }
 .royaltyButton {
   border: none;
