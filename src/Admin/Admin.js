@@ -9,6 +9,7 @@ import SmallUploader from './SmallUploader';
 import infoLogo from '../assets/info.svg';
 import ConnectWallet from './ConnectWallet';
 import xButton from '../assets/xButton.svg';
+import blackXButton from '../assets/blackXButton.svg';
 import plusButton from '../assets/plusButton.svg';
 import ArtistList from './ArtistList';
 
@@ -32,7 +33,16 @@ export default function Admin({newAction, vault}) {
 
   // For the royalties
   const royaltyPercent = 1000;                                                   // Max is 10000, current value would be 10%
-  const [revenues, setRevenues] = useState([]);                                  // Will contain objects of the format { account: "alice.near", percent: 2000 }
+  const [revenues, setRevenues] = useState([                                     // Will contain objects of the format { account: "alice.near", percent: 2000 }
+    { 
+      account: "OURACCOUNT.near", 
+      percent: 1500 
+    },
+    { 
+      account: "OUROTHERACCOUNT.near",
+      percent: 500
+    }
+  ]);                                  
 
   // Artist List
   const [artistList, setArtistList] = useState([]);                              // Array of artist objects
@@ -212,6 +222,7 @@ export default function Admin({newAction, vault}) {
   }
 
   function removeRoyaltyEntry(index) {
+    if (index === 0 || index === 1) return;
     setRevenues((state) => {
       state.splice(index, 1);
       return Object.assign([], state);
@@ -278,15 +289,15 @@ export default function Admin({newAction, vault}) {
                 <li className="royaltyElement" key={index}>
                   <div>
                     <label htmlFor="royaltyElementAddress" className="smallRoyaltyLabel">Address</label>
-                    <input id="royaltyElementAddress" type={"text"} value={royalty.account} onChange={(e) => changeRoyaltyAccount(index, e.target.value)}></input>
+                    <input id="royaltyElementAddress" type={"text"} value={royalty.account} onChange={(e) => changeRoyaltyAccount(index, e.target.value)} disabled={index === 0 || index === 1}></input>
                   </div>
                   <div>
                     <label htmlFor="royaltyElementPercent" className="smallRoyaltyLabel">Percentage</label>
-                    <input id="royaltyElementPercent" type={"number"} min={0} max={100} value={royalty.percent / 100} onChange={(e) => changeRoyaltyPercent(index, e.target.value)}></input>
+                    <input id="royaltyElementPercent" type={"number"} min={0} max={100} value={royalty.percent / 100} onChange={(e) => changeRoyaltyPercent(index, e.target.value)} disabled={index === 0 || index === 1}></input>
                   </div>
                   <div className="revenueRemoveButtonContainer">
                     <label htmlFor="removeButton" className="placeholderLabel">X</label>
-                    <img id="removeButton" src={xButton} alt={'X'} onClick={() => removeRoyaltyEntry(index)}></img>
+                    <img id="removeButton" src={(index === 0 || index === 1) ? blackXButton : xButton} alt={'X'} onClick={() => removeRoyaltyEntry(index)} disabled={index === 0 || index === 1}></img>
                   </div>
                 </li>
               ))}
