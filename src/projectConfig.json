@@ -1,5 +1,5 @@
 {
   "test": "3",
-  "contractName": "NONEXISTENT.DOESNOTEXIST.near",
+  "contractName": "nft.soundsplash.testnet",
   "admin": "daorecords.near"
 }
