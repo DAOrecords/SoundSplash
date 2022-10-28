@@ -1,6 +1,7 @@
 import React from 'react';
 import plusButton from '../assets/plusButton.svg';
 import xButton from '../assets/xButton.svg';
+import infoLogo from '../assets/info.svg';
 
 
 export default function ArtistList({artistList, setArtistList}) {
@@ -44,7 +45,7 @@ export default function ArtistList({artistList, setArtistList}) {
         <button className="royaltyButton" onClick={addNewArtist}>
           <img src={plusButton} alt={'+'}></img>
         </button>
-      </label>            
+      </label>
       
       <ul className="artistList">
         {artistList.map((artist, index) => (
@@ -114,6 +115,10 @@ export default function ArtistList({artistList, setArtistList}) {
           </li>
         ))}
       </ul>
+      <div className="infoDiv">
+        <img src={infoLogo}></img>
+        <p>{"We created this section for you to provide information about the artist and other contributors to the song your are minting. Please provide the relevant information as you like."}</p>
+      </div>
     </>
   )
 }

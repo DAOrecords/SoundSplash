@@ -893,6 +893,7 @@ input[type=number] {
 .royaltyList div label {
   margin-bottom: 16px;
   margin-top: 16px;
+  color: #FFFFFF;
 }
 .placeholderLabel {
   display: block;

@@ -272,12 +272,20 @@ export default function Admin({newAction, vault}) {
               }
               <div className="infoDiv">
                 <img src={infoLogo}></img>
-                <p>{"Supported formats .jpg .png and .mp3"}</p>
+                <p>{"Upload your Audio & Image files here. Make sure your Audio file is in MP3 format and your Image file is a JPG with a 1:1 ratio, not bigger then 500 KB."}</p>
               </div>
             <label className="fieldName">Title</label>
             <input type={"text"} value={title} className="nftTitleInput" onChange={(e) => setTitle(e.target.value)} />
+            <div className="infoDiv">
+              <img src={infoLogo}></img>
+              <p>{"The title of your song goes here"}</p>
+            </div>
             <label className="fieldName">Description</label>
-            <textarea value={desc} className="descInput" onChange={(e) => setDesc(e.target.value)} />
+            <textarea value={desc} className="descInput" onChange={(e) => setDesc(e.target.value)} maxLength={500} />
+            <div className="infoDiv">
+              <img src={infoLogo}></img>
+              <p>{"In this section provide a short description of your song. Try to keep it to 1 Paragraph."}</p>
+            </div>
             
             <label className="fieldName">Creator split
               <button className="royaltyButton" onClick={addNewRoyaltyEntry}>
@@ -302,10 +310,19 @@ export default function Admin({newAction, vault}) {
                 </li>
               ))}
             </ul>
+            <div className="infoDiv">
+              <img src={infoLogo}></img>
+              <p>{"We have burned in a 15% to DAOrecords DAO and 5% to Record Pool DAO. Below please input the wallet addresses and the associated %s."}</p>
+            </div>
             <ArtistList artistList={artistList} setArtistList={setArtistList} />
 
             <label className="fieldName">Price</label>
             <input type={"number"} min={0} value={price} className="priceInput" onChange={(e) => setPrice(e.target.value)} />
+            <div className="infoDiv">
+              <img src={infoLogo}></img>
+              <p>{"All NFTs are priced in $NEAR. Make sure to check the current price and be aware that this price might fluctuate over time up or down and you won't be able to change it in the future."}</p>
+            </div>
+
           </div>
 
           <PreviewBox title={title} image={image} music={music} price={price}/>
