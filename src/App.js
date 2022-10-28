@@ -132,7 +132,6 @@ export default function App() {
               <TopMenu setShowActivity={setShowActivity} showActivity={showActivity} actionHistory={actionHistory} 
                 setShowWallet={setShowWallet} showWallet={showWallet} />
               <Admin newAction={newAction} vault={configObj.contractName} />
-              <Footer />
             </>
           }
         />

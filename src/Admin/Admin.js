@@ -312,7 +312,7 @@ export default function Admin({newAction, vault}) {
             </ul>
             <div className="infoDiv">
               <img src={infoLogo}></img>
-              <p>{"We have burned in a 15% to DAOrecords DAO and 5% to Record Pool DAO. Below please input the wallet addresses and the associated %s."}</p>
+              <p>{"We have burned in a 15% to DAOrecords DAO and 5% to Record Pool DAO. Below please input the wallet addresses and the associated %s. You can add new entries by the plus button."}</p>
             </div>
             <ArtistList artistList={artistList} setArtistList={setArtistList} />
 

@@ -117,7 +117,7 @@ export default function ArtistList({artistList, setArtistList}) {
       </ul>
       <div className="infoDiv">
         <img src={infoLogo}></img>
-        <p>{"We created this section for you to provide information about the artist and other contributors to the song your are minting. Please provide the relevant information as you like."}</p>
+        <p>{"We created this section for you to provide information about the artist and other contributors to the song your are minting. Please provide the relevant information as you like. Add new entries by the plus button."}</p>
       </div>
     </>
   )
