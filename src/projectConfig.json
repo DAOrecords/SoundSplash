@@ -1,5 +1,5 @@
 {
-  "test": "3",
-  "contractName": "nft.soundsplash.testnet",
-  "admin": "daorecords.near"
+  "test": "32",
+  "contractName": "admintest1.soundsplash.testnet",
+  "admin": "daorecords.testnet"
 }
