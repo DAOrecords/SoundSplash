@@ -35,11 +35,11 @@ export default function Admin({newAction, vault}) {
   const royaltyPercent = 1000;                                                   // Max is 10000, current value would be 10%
   const [revenues, setRevenues] = useState([                                     // Will contain objects of the format { account: "alice.near", percent: 2000 }
     { 
-      account: "OURACCOUNT.near", 
+      account: "daorecords.sputnik-dao.near", 
       percent: 1500 
     },
     { 
-      account: "OUROTHERACCOUNT.near",
+      account: "recordpooldao.sputnik-dao.near",
       percent: 500
     }
   ]);                                  

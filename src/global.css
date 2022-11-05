@@ -636,7 +636,7 @@ main {
 #mynftsBackground {
   background: black;
   position: absolute;
-  height: 100vh;
+  height: auto;
   width: 100vw;
 }
 
