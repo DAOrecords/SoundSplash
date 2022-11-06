@@ -9,7 +9,9 @@ import SmallUploader from './SmallUploader';
 import infoLogo from '../assets/info.svg';
 import ConnectWallet from './ConnectWallet';
 import xButton from '../assets/xButton.svg';
+import blackXButton from '../assets/blackXButton.svg';
 import plusButton from '../assets/plusButton.svg';
+import ArtistList from './ArtistList';
 
 
 export default function Admin({newAction, vault}) {  
@@ -30,8 +32,20 @@ export default function Admin({newAction, vault}) {
   const [musicHash, setMusicHash] = useState("");
 
   // For the royalties
-  const [revenuePercent, setRevenuePercent] = useState(1000);                    // Max is 10000, current value would be 10%
-  const [royalties, setRoyalties] = useState([]);                                // Will contain objects of the format { account: "alice.near", percent: 2000 }
+  const royaltyPercent = 1000;                                                   // Max is 10000, current value would be 10%
+  const [revenues, setRevenues] = useState([                                     // Will contain objects of the format { account: "alice.near", percent: 2000 }
+    { 
+      account: "daorecords.sputnik-dao.near", 
+      percent: 1500 
+    },
+    { 
+      account: "recordpooldao.sputnik-dao.near",
+      percent: 500
+    }
+  ]);                                  
+
+  // Artist List
+  const [artistList, setArtistList] = useState([]);                              // Array of artist objects
   
 
   useEffect(async () => {
@@ -123,9 +137,11 @@ export default function Admin({newAction, vault}) {
   }
 
   function createNFT() {
-    /**TEST */ console.log("creatorSplit: ", revenuePercent); console.log("foreverRoyalties: ", royalties);
+    /**TEST */ console.log("creatorSplit: ", royaltyPercent); console.log("foreverRoyalties: ", revenues);
+    /**TEST */ console.log("artistList: ", artistList);
+    /**TEST */ console.log("artistList JSON: ", JSON.stringify(JSON.stringify(artistList)));
 
-    const percentTotal = royalties.reduce((total, item) => {
+    const percentTotal = revenues.reduce((total, item) => {
       return total + item.percent;
     }, 0);
     console.log("percentTotal: ", percentTotal);
@@ -162,17 +178,20 @@ export default function Admin({newAction, vault}) {
     }
     
     const revenueTable = {
-      [window.accountId]: revenuePercent,
-      [vault]: calculateVaultPercent(revenuePercent)
+      [window.accountId]: royaltyPercent,
+      [vault]: calculateVaultPercent(royaltyPercent)
     };
 
     const foreverTable = {};
-    royalties.map((royaltyEntry) => {
+    revenues.map((royaltyEntry) => {
       foreverTable[royaltyEntry.account] = royaltyEntry.percent
     });
     
 
     const mintPromise = new Promise(async (resolve, reject) => {
+      // Save artistList, this is half-manual
+      const escapedName = escape(title);
+      fetch(`https://daorecords.io:8443/upload/artist_list?list=${JSON.stringify(JSON.stringify(artistList))}&name=${escapedName}`);
       const mintResult = await mintRootNFT(title, desc, imageCID, imageHash, musicCID, musicHash, price, foreverTable, revenueTable);
       if (mintResult) {
         resolve("The mint was successfull (message from promise)");
@@ -192,13 +211,8 @@ export default function Admin({newAction, vault}) {
     return 10000 - creatorSplit;
   }
 
-  function changeRevenuePercent(newValue) {
-    if (newValue > 100) return;
-    setRevenuePercent(Math.ceil(newValue*100));
-  }
-
   function addNewRoyaltyEntry() {
-    setRoyalties((state) => {
+    setRevenues((state) => {
       state.push({
         account: "",
         percent: 0,
@@ -208,14 +222,15 @@ export default function Admin({newAction, vault}) {
   }
 
   function removeRoyaltyEntry(index) {
-    setRoyalties((state) => {
+    if (index === 0 || index === 1) return;
+    setRevenues((state) => {
       state.splice(index, 1);
       return Object.assign([], state);
     })
   }
 
   function changeRoyaltyAccount(index, newName) {
-    setRoyalties((state) => {
+    setRevenues((state) => {
       state[index].account = newName;
       return Object.assign([], state);
     })
@@ -223,7 +238,7 @@ export default function Admin({newAction, vault}) {
 
   function changeRoyaltyPercent(index, newPercent) {
     if (newPercent > 100) return;
-    setRoyalties((state) => {
+    setRevenues((state) => {
       state[index].percent = Math.ceil(newPercent*100);
       return Object.assign([], state);
     })
@@ -233,9 +248,9 @@ export default function Admin({newAction, vault}) {
 
 
   return (
-    <main id="adminMain">
-      <div id="adminMain" className={"adminMain"}>
-        <h1 className="title">Mint NFT</h1>
+    <div id="mynftsBackground">
+      <main id="adminMain">
+        <h1 id="mainTitle"><p>Mint NFT</p></h1>
 
         <div id="adminFlexBox" className="adminFlexBox">
           <div id="nft-details" className="nft-details">
@@ -257,49 +272,67 @@ export default function Admin({newAction, vault}) {
               }
               <div className="infoDiv">
                 <img src={infoLogo}></img>
-                <p>{"Supported formats .jpg .png and .mp3"}</p>
+                <p>{"Upload your Audio & Image files here. Make sure your Audio file is in MP3 format and your Image file is a JPG with a 1:1 ratio, not bigger then 500 KB."}</p>
               </div>
             <label className="fieldName">Title</label>
             <input type={"text"} value={title} className="nftTitleInput" onChange={(e) => setTitle(e.target.value)} />
+            <div className="infoDiv">
+              <img src={infoLogo}></img>
+              <p>{"The title of your song goes here"}</p>
+            </div>
             <label className="fieldName">Description</label>
-            <textarea value={desc} className="descInput" onChange={(e) => setDesc(e.target.value)} />
+            <textarea value={desc} className="descInput" onChange={(e) => setDesc(e.target.value)} maxLength={500} />
+            <div className="infoDiv">
+              <img src={infoLogo}></img>
+              <p>{"In this section provide a short description of your song. Try to keep it to 1 Paragraph."}</p>
+            </div>
             
-            <label className="fieldName">Royalty percentage</label>
-            <input className="nftTitleInput" type={"number"} min={0} value={revenuePercent / 100} onChange={(e) => changeRevenuePercent(e.target.value)}></input>
             <label className="fieldName">Creator split
               <button className="royaltyButton" onClick={addNewRoyaltyEntry}>
                 <img src={plusButton} alt={'+'}></img>
               </button>
             </label>
             <ul className="royaltyList">
-              {royalties.map((royalty, index) => (
+              {revenues.map((royalty, index) => (
                 <li className="royaltyElement" key={index}>
                   <div>
                     <label htmlFor="royaltyElementAddress" className="smallRoyaltyLabel">Address</label>
-                    <input id="royaltyElementAddress" type={"text"} value={royalty.account} onChange={(e) => changeRoyaltyAccount(index, e.target.value)}></input>
+                    <input id="royaltyElementAddress" type={"text"} value={royalty.account} onChange={(e) => changeRoyaltyAccount(index, e.target.value)} disabled={index === 0 || index === 1}></input>
                   </div>
                   <div>
                     <label htmlFor="royaltyElementPercent" className="smallRoyaltyLabel">Percentage</label>
-                    <input id="royaltyElementPercent" type={"number"} min={0} max={100} value={royalty.percent / 100} onChange={(e) => changeRoyaltyPercent(index, e.target.value)}></input>
+                    <input id="royaltyElementPercent" type={"number"} min={0} max={100} value={royalty.percent / 100} onChange={(e) => changeRoyaltyPercent(index, e.target.value)} disabled={index === 0 || index === 1}></input>
                   </div>
-                  <div>
+                  <div className="revenueRemoveButtonContainer">
                     <label htmlFor="removeButton" className="placeholderLabel">X</label>
-                    <img id="removeButton" src={xButton} alt={'X'} onClick={() => removeRoyaltyEntry(index)}></img>
+                    <img id="removeButton" src={(index === 0 || index === 1) ? blackXButton : xButton} alt={'X'} onClick={() => removeRoyaltyEntry(index)} disabled={index === 0 || index === 1}></img>
                   </div>
                 </li>
               ))}
             </ul>
+            <div className="infoDiv">
+              <img src={infoLogo}></img>
+              <p>{"We have burned in a 15% to DAOrecords DAO and 5% to Record Pool DAO. Below please input the wallet addresses and the associated %s. You can add new entries by the plus button."}</p>
+            </div>
+            <ArtistList artistList={artistList} setArtistList={setArtistList} />
 
             <label className="fieldName">Price</label>
             <input type={"number"} min={0} value={price} className="priceInput" onChange={(e) => setPrice(e.target.value)} />
+            <div className="infoDiv">
+              <img src={infoLogo}></img>
+              <p>{"All NFTs are priced in $NEAR. Make sure to check the current price and be aware that this price might fluctuate over time up or down and you won't be able to change it in the future."}</p>
+            </div>
+
           </div>
 
           <PreviewBox title={title} image={image} music={music} price={price}/>
         </div>
+
         <div className="buttonContainer">
           <button onClick={createNFT} className="mainButton">Mint</button>
         </div>
-      </div>
-    </main>
+      </main>
+
+    </div>
   )
 }

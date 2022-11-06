@@ -2,7 +2,7 @@ import { connect, Contract, keyStores, WalletConnection, utils, KeyPair, provide
 import * as nearAPI from "near-api-js";
 const CryptoJS = require('crypto-js');
 
-const mode = 'mainnet';       // 'mainnet' || 'development'
+const mode = 'development';       // 'mainnet' || 'development'
 
 const provider = new providers.JsonRpcProvider(
   "https://rpc.mainnet.near.org"

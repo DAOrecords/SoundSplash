@@ -392,12 +392,13 @@ main {
 }
 #adminMain {
   overflow: scroll;
-  background: var(--main-bg);
+  padding: var(--spacing-5);
+  position: relative;
+  z-index: 2;
+  /*margin-right: 0;*/
+  /*padding-right: var(--spacing-5);*/
 }
 
-.adminMain {
-  padding: var(--spacing-5);
-}
 
 .connectWallet {
   padding-top: var(--spacing-5);
@@ -445,11 +446,13 @@ main {
   position: absolute;
   font-family: neue-haas-grotesk-display;
   background: white;
+  color: #222222;
+  border: 2px solid #FFAD0D;
   border-radius: 2px;
   font-size: 12px;
   top: 58px;
   padding: 16px;
-  right: 100px;
+  right: 66px;
   width: 183px;
   height: 99px;
   text-transform: uppercase;
@@ -501,6 +504,7 @@ main {
 #mainWalletButtonContainer {
   display: flex;
   justify-content: center;
+  margin-bottom: var(--spacing-5);
 }
 .guestText {
   margin-top: 20px;
@@ -635,9 +639,12 @@ main {
 
 #mynftsBackground {
   background: black;
-  position: absolute;
+  position: fixed;
   height: 100vh;
   width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
 
 #mynftsGrid {
@@ -651,7 +658,7 @@ main {
   background: unset;
   overflow: unset;
 }
-#mynftsTitle {
+#mainTitle {
   font-family: GeneralSans;
   font-style: normal;
   font-weight: 600;
@@ -664,8 +671,9 @@ main {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
 }
-#mynftsTitle img {
+#mainTitle img {
   width: 45px;
   height: 45px;
   margin-left: 16px;
@@ -807,26 +815,31 @@ main {
   display: block;
   margin-top: var(--spacing-4);
   margin-bottom: var(--spacing-2);
+  font-family: GeneralSans;
+  font-style: normal;
   font-weight: 600;
-  font-size: 18px;
-  line-height: 21px;
-  color: #000000;
+  font-size: 20px;
+  line-height: 160%;
+  color: #FFFFFF;
 }
 
 .nftTitleInput {
   width: 99%;
   height: var(--small-input);
+  border-radius: 5px;
 }
 
 .descInput {
   width: 99%;
   height: var(--large-input);
+  border-radius: 5px;
 }
 
 .priceInput {
   width: 99%;
   height: 28px;
   background: white url('./assets/logo-black.svg') right no-repeat;
+  border-radius: 5px;
 }
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
@@ -837,6 +850,30 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+.artistList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.artistListElement {
+  display: flex;
+}
+.artistListInputGroup {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+.artistListInput {
+  width: 48%;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  height: 28px;
+  border-radius: 5px;
+}
+.artistListRemove {
+  justify-self: end;
 }
 
 .royaltyList {
@@ -858,14 +895,18 @@ input[type=number] {
 .royaltyList div input {
   width: 100%;
   height: 28px;
+  border-radius: 5px;
 }
 .royaltyList div label {
   margin-bottom: 16px;
   margin-top: 16px;
+  color: #FFFFFF;
 }
 .placeholderLabel {
   display: block;
   visibility: hidden;
+  width: 0;
+  height: 0;
 }
 .royaltyButton {
   border: none;
@@ -879,6 +920,9 @@ input[type=number] {
   display: block;
   font-size: 16px;
 }
+.revenueRemoveButtonContainer {
+  align-self: end;
+}
 
 
 .previewBox {
@@ -886,6 +930,7 @@ input[type=number] {
   padding: var(--spacing-3);
   box-shadow: 0 0 6px rgba(35, 173, 278, 1);
   background-color: var(--box-color);
+  border-radius: 5px;
 }
 .previewImage {
   width: 100%;
@@ -927,6 +972,7 @@ input[type=number] {
   border-style: dashed;
   border-radius: 2px;
   text-align: center;
+  border-radius: 15px;
 }
 .imageDropZoneActive {
   background-color: white;
@@ -966,12 +1012,11 @@ input[type=number] {
   margin-top: 80px;
   border: none;
   padding: 11.5px var(--spacing-3);
-  color: white;
-  background: #333333;
+  background: #FFAD0D;
   border-radius: 3px;
 }
 .mainButton:hover {
-  background: #828282;
+  color: white;
   cursor: pointer;
 }
 .mainButton:disabled {
@@ -983,6 +1028,7 @@ input[type=number] {
 }
 .buttonContainer {
   text-align: center;
+  padding-bottom: calc(2 * var(--nav-size));
 }
 
 .adminFlexBox {

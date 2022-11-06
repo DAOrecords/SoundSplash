@@ -1,6 +1,7 @@
 const express = require('express');
 const fileUpload = require("express-fileupload");
 const path = require("path");
+const fs = require('fs');
 
 const uploadHandler = require('../utils/uploadHandler.js');
 const router = express.Router();
@@ -27,6 +28,16 @@ router.post('/image', function(req, res) {
 
 router.post('/music', function(req, res) {
   uploadHandler(req, res, "music");
+});
+
+router.get('/artist_list', function(req, res) {
+  const path = '/root/artistLists/' + req.query.name;
+
+  fs.writeFile(path, req.query.list, () => {
+    const obj = JSON.parse(JSON.parse(req.query.list));
+    res.send(obj);
+  });
+
 });
 
 module.exports = router;
