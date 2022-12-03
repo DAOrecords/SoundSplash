@@ -8,23 +8,42 @@ const sharp = require('sharp');
 dotenv.config();
 
 // NEAR RPC
-const provider = new providers.JsonRpcProvider(
+const mainnetProvider = new providers.JsonRpcProvider(
   "https://rpc.mainnet.near.org"
 );
 
+// NEAR testnet RPC
+const testnetProvider = new providers.JsonRpcProvider(
+  "https://rpc.testnet.near.org"
+)
+
 // PostgreSQL connection details
-const pool = new Pool({
+const productionPool = new Pool({
   user: process.env.DB_USERNAME,
   host: 'localhost',
   database: 'daorecords',
   password: process.env.DB_PASSWORD,
   port: 5432,
 });
-pool.connect();
+productionPool.connect();
+
+// PostgreSQL testnet connection details
+const testnetPool = new Pool({
+  user: process.env.DB_USERNAME,
+  host: 'localhost',
+  database: 'testnet',
+  password: process.env.DB_PASSWORD,
+  port: 5432,
+});
+testnetPool.connect();
 
 
 // This route will update the entries for a given user (will delete ownership, or add ownership of NFTs, based on response from contract)
 router.get('/nfts_for_owner', async function (req, res) {
+  const testnet = req.query.testnet;
+  const pool = (testnet ? testnetPool : productionPool);
+  const provider = (testnet ? testnetProvider : mainnetProvider);
+
   try {
     const contractParams = {
       account_id: req.query.owner,
@@ -75,6 +94,10 @@ router.get('/nfts_for_owner', async function (req, res) {
 
 // This route will update the entries for a given user, on all contracts
 router.get('/all_nfts_for_owner', async function (req, res) {
+  const testnet = req.query.testnet;
+  const pool = (testnet ? testnetPool : productionPool);
+  const provider = (testnet ? testnetProvider : mainnetProvider);
+
   try {
     let contracts = [];
 
@@ -136,6 +159,10 @@ router.get('/all_nfts_for_owner', async function (req, res) {
 
 // This route will update a single NFT, input parameters are `contract` and `nft_id`
 router.get('/single_nft', async function (req, res) {
+  const testnet = req.query.testnet;
+  const pool = (testnet ? testnetPool : productionPool);
+  const provider = (testnet ? testnetProvider : mainnetProvider);
+
   try {
     const contractParams = {
       token_list: [ req.query.nft_id ],

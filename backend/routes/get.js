@@ -5,20 +5,32 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // PostgreSQL connection details
-const pool = new Pool({
+const productionPool = new Pool({
   user: process.env.DB_USERNAME,
   host: 'localhost',
   database: 'daorecords',
   password: process.env.DB_PASSWORD,
   port: 5432,
 });
-pool.connect();
+productionPool.connect();
+
+// PostgreSQL testnet connection details
+const testnetPool = new Pool({
+  user: process.env.DB_USERNAME,
+  host: 'localhost',
+  database: 'testnet',
+  password: process.env.DB_PASSWORD,
+  port: 5432,
+});
+testnetPool.connect();
 
 
 // Get list of NFTs for user, accross all contracts that our database knows
 router.get('/nft_list_for_owner', async function (req, res) {
   try {
     const user = req.query.user;
+    const testnet = req.query.testnet;
+    const pool = (testnet ? testnetPool : productionPool);
 
     await pool.query('SELECT * FROM nfts_by_owner WHERE owner_account = $1', [user])
       .then((response) => {
@@ -50,6 +62,8 @@ router.get('/thumbnail', async function (req, res) {
     const rootID = req.query.root_id;
     const contract = req.query.contract;
     const uniqID = contract + rootID;
+    const testnet = req.query.testnet;
+    const pool = (testnet ? testnetPool : productionPool);
     
     await pool.query('SELECT thumbnail FROM nft_thumbnails WHERE uniq_id = $1', [uniqID])
       .then((response) => {
@@ -72,6 +86,8 @@ router.get('/collaborators', async function (req, res) {
     const rootID = req.query.root_id;
     const contract = req.query.contract;
     const uniqID = contract + rootID;
+    const testnet = req.query.testnet;
+    const pool = (testnet ? testnetPool : productionPool);
 
     await pool.query('SELECT collab_list FROM collaborators WHERE uniq_id = $1', [uniqID])
       .then((response) => {
@@ -98,6 +114,8 @@ router.get('/nft_list', async function (req, res) {
   try {
     const start = req.query.start || 0;
     const pageSize = req.query.page_size || 10000000;
+    const testnet = req.query.testnet;
+    const pool = (testnet ? testnetPool : productionPool);
 
     await pool.query(`SELECT * FROM nft_thumbnails LIMIT ${pageSize} OFFSET ${start}`)
       .then((response) => {
@@ -120,7 +138,10 @@ router.get('/nft_list', async function (req, res) {
 
 
 // Get number of entries in thumbnails table (returns a number)
-router.get('/nft_list_length', async function (_req, res) {
+router.get('/nft_list_length', async function (req, res) {
+  const testnet = req.query.testnet;
+  const pool = (testnet ? testnetPool : productionPool);
+
   try {
     await pool.query("SELECT null FROM nft_thumbnails")
       .then((response) => {

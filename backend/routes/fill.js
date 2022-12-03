@@ -7,24 +7,42 @@ const dotenv = require('dotenv');
 const sharp = require('sharp');
 dotenv.config();
 
-// NEAR
-const provider = new providers.JsonRpcProvider(
+// NEAR RPC
+const mainnetProvider = new providers.JsonRpcProvider(
   "https://rpc.mainnet.near.org"
 );
 
+// NEAR testnet RPC
+const testnetProvider = new providers.JsonRpcProvider(
+  "https://rpc.testnet.near.org"
+)
+
 // PostgreSQL connection details
-const pool = new Pool({
+const productionPool = new Pool({
   user: process.env.DB_USERNAME,
   host: 'localhost',
   database: 'daorecords',
   password: process.env.DB_PASSWORD,
   port: 5432,
 });
-pool.connect();
+productionPool.connect();
+
+// PostgreSQL testnet connection details
+const testnetPool = new Pool({
+  user: process.env.DB_USERNAME,
+  host: 'localhost',
+  database: 'testnet',
+  password: process.env.DB_PASSWORD,
+  port: 5432,
+});
+testnetPool.connect();
 
 
 // By calling this route, we can fill up the database with all the NFTs that exist accross the system, with owner ID
 router.get('/nfts_by_owner', async function(req, res) {
+  const testnet = req.query.testnet;
+  const pool = (testnet ? testnetPool : productionPool);
+  const provider = (testnet ? testnetProvider : mainnetProvider);
   let contracts = [];
 
   await pool.query('SELECT * FROM contracts')
@@ -81,6 +99,9 @@ router.get('/nfts_by_owner', async function(req, res) {
 // By calling this route, we can fill up the database with thumbnails for faster MyNFTs page loading. 
 // The thumbnails are in the SQL database, base64 encoded
 router.get('/nft_thumbnails', async function (req, res) {
+  const testnet = req.query.testnet;
+  const pool = (testnet ? testnetPool : productionPool);
+  const provider = (testnet ? testnetProvider : mainnetProvider);
   let contracts = [];
   const len = 2 * 1024 * 1024;                                                      // 2 MB
   const pos = 0;
