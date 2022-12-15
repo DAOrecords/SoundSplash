@@ -11,14 +11,10 @@ pub use crate::metadata::*;
 pub use crate::mint::*;
 pub use crate::nft_core::*;
 pub use crate::approval::*;
-pub use crate::royalty::*;
 pub use crate::events::*;
-pub use crate::buy::*;
 pub use crate::transfer::*;
 pub use crate::guestbook::*;
 pub use crate::withdraw::*;
-pub use crate::revenue::*;
-pub use crate::migration::*;
 
 mod internal;
 mod approval; 
@@ -26,14 +22,11 @@ mod enumeration;
 mod metadata; 
 mod mint; 
 mod nft_core; 
-mod royalty; 
 mod events;
-mod buy;
 mod transfer;
 mod guestbook;
 mod withdraw;
-mod revenue;
-mod migration;
+
 
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
@@ -59,20 +52,21 @@ pub trait LocalContract {
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct Contract {    
-    pub owner_id: AccountId,                                                               // Contract owner. This is the Vault
-    pub admin: AccountId,                                                                  // Account that can create new RootNFTs and withdraw funds
+    pub owner_id: AccountId,                                                               // Contract owner. This is the Vault **WARNING** We might need to change this if FonoRoot contracts will belong to a DAO, and minting will be done through the DAO
+    pub admin: AccountId,                                                                  // Account that can create new RootNFTs and withdraw funds **WARNING** This might need to be the address of the DAO, or multiple fields will be necessary, because of CronCat for example
     pub root_nonce: u128,                                                                  // We will use this for the creation of the `token_id`
     pub tokens_per_owner: LookupMap<AccountId, UnorderedSet<TokenId>>,                     // Keeps track of all the token IDs for a given account
     pub tokens_by_id: LookupMap<TokenId, Token>,                                           // Keeps track of the token struct for a given token ID
     pub token_metadata_by_id: UnorderedMap<TokenId, TokenMetadata>,                        // Keeps track of the token metadata for a given token ID
     pub metadata: LazyOption<NFTContractMetadata>,                                         // Keeps track of the metadata for the contract (not metadata for NFT)
-    pub crust_key: String,                                                                 // The encrypted private key for the Crust Network
-    pub guestbook: Vec<GuestBookEntry>,                                                    // The Guestbook is an array of entry objects
+    pub crust_key: String,                                                                 // The encrypted private key for the Crust Network **WARNING** this needs to be deleted for the next contract instances, although we can't delete it for the existing instances
+    pub guestbook: Vec<GuestBookEntry>,                                                    // The Guestbook is an array of entry objects **WARNING** Might or might not need it, we don't know how the Platform will really look like. We need to think about this.
 }
 
-/// Helper structure for keys of the persistent collections.
+/// Helper structure for keys of the persistent collections.  
+/// Storage keys are simply the prefixes used for the collections. This helps avoid data collision
 #[derive(BorshSerialize)]
-pub enum StorageKey {
+pub enum StorageKey {                                                                      // ** WARNING** We might need to update this
     TokensPerOwner,
     TokenPerOwnerInner { account_id_hash: CryptoHash },
     TokensById,
@@ -95,7 +89,7 @@ impl Contract {
                 spec: "nft-1.0.0".to_string(),
                 name: "Fono Root".to_string(),
                 symbol: "FONO".to_string(),
-                icon: Some("https://bafkreidcyhpdyo7kq4kdcr3yr3l5ewyey6mvzqlxjm67n4opqxhw2zllja.ipfs.nftstorage.link/s".to_string()),
+                icon: Some("https://bafkreidcyhpdyo7kq4kdcr3yr3l5ewyey6mvzqlxjm67n4opqxhw2zllja.ipfs.nftstorage.link/s".to_string()),       // **WARNING** picture is not good this way!
                 base_uri: None,
                 reference: None,
                 reference_hash: None,
@@ -107,13 +101,11 @@ impl Contract {
     pub fn new(owner_id: AccountId, admin: AccountId, metadata: NFTContractMetadata) -> Self {
         log!("Initializing contract instance...");
         let this = Self {
-            // Storage keys are simply the prefixes used for the collections. This helps avoid data collision
             tokens_per_owner: LookupMap::new(StorageKey::TokensPerOwner.try_to_vec().unwrap()),
             tokens_by_id: LookupMap::new(StorageKey::TokensById.try_to_vec().unwrap()),
             token_metadata_by_id: UnorderedMap::new(
                 StorageKey::TokenMetadataById.try_to_vec().unwrap(),
             ),
-            // Set the owner_id field equal to the passed in owner_id. 
             owner_id,
             admin,
             root_nonce: 0,
@@ -121,7 +113,7 @@ impl Contract {
                 StorageKey::NFTContractMetadata.try_to_vec().unwrap(),
                 Some(&metadata),
             ),
-            crust_key: "".to_string(),
+            crust_key: "".to_string(),  // this will be deleted for new instance
             guestbook: Vec::new()
         };
 

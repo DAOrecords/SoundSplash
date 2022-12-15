@@ -41,11 +41,6 @@ where
     Promise::new(account_id).transfer(Balance::from(storage_released) * env::storage_byte_cost())
 }
 
-// Get royalty amount from percentage and total amount. Currently 0.01% is minimum that can be set.
-pub(crate) fn royalty_to_payout(royalty_percentage: u32, total: Balance) -> U128 {
-    U128(royalty_percentage as u128 * total / 10_000u128)
-}
-
 pub(crate) fn refund_approved_account_ids(
     account_id: AccountId,
     approved_account_ids: &HashMap<AccountId, u64>,
@@ -53,7 +48,7 @@ pub(crate) fn refund_approved_account_ids(
     refund_approved_account_ids_iter(account_id, approved_account_ids.keys())
 }
 
-pub(crate) fn refund_deposit(storage_used: u64, nft_price: SalePriceInYoctoNear) {
+pub(crate) fn refund_deposit(storage_used: u64) {
     let required_cost = env::storage_byte_cost() * Balance::from(storage_used);
     let attached_deposit = env::attached_deposit();
 
@@ -63,7 +58,7 @@ pub(crate) fn refund_deposit(storage_used: u64, nft_price: SalePriceInYoctoNear)
         required_cost,
     );
 
-    let refund = attached_deposit - required_cost - u128::from(nft_price);
+    let refund = attached_deposit - required_cost;
 
     if refund > 1 {
         Promise::new(env::predecessor_account_id()).transfer(refund);
@@ -102,7 +97,7 @@ impl Contract {
 
         tokens_set.remove(token_id);                                                        // Remove the token
 
-        if tokens_set.is_empty() {
+        if tokens_set.is_empty() {                                                          // If the owner does not have any more token, we remove the associated entry from the list
             self.tokens_per_owner.remove(account_id);
         } else {
             self.tokens_per_owner.insert(account_id, &tokens_set);
@@ -149,8 +144,6 @@ impl Contract {
             owner_id: receiver_id.clone(),
             approved_account_ids: Default::default(),                                       // We reset the approval account ids
             next_approval_id: token.next_approval_id,
-            royalty: token.royalty.clone(),
-            revenue: token.revenue.clone(),                                                 // Probably this could be empty
         };
         self.tokens_by_id.insert(token_id, &new_token);
 

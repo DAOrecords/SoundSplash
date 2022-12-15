@@ -18,8 +18,8 @@ impl Contract {
             .collect()
     }
 
-    /// Query for NFT tokens on the contract regardless of the owner using pagination
-    pub fn nft_token_details_for_list(&self, token_list: Vec<TokenId>) -> Vec<JsonToken> {
+    /// Query for list of NFT tokens on the contract, based on a list of TokenId that was provided as a parameter
+    pub fn nft_token_details_for_list(&self, token_list: Vec<TokenId>) -> Vec<JsonToken> {  // **WARNING** we don't have a test for this!
         let mut result = Vec::new();
 
         for i in 0..token_list.len() {
@@ -70,12 +70,14 @@ impl Contract {
     /// Get the next NFT that can be bought from a given root
     pub fn get_next_buyable(&self, root_id: TokenId) -> TokenId {
         log!("root_id: {}", &root_id);
+        // **WARNING** most likely this is much simplier then this. Possible we will need to create a `last_bought` variable next to instance_nonce
+
         let root_meta = self.token_metadata_by_id.get(&root_id.clone());
         let root_extra: Extra = serde_json::from_str(&root_meta.unwrap().extra.unwrap()).unwrap();
         
         let mut lowest_id = "".to_string();
         let mut lowest = 999_999;
-        for i in 0..root_extra.instance_nounce {
+        for i in 0..root_extra.instance_nonce {
             let id = root_id.to_string() + "-" + &i.to_string();
             if self.tokens_by_id.get(&id).unwrap().owner_id == env::current_account_id() {           // If the token is in the Vault ...
                 let instance_meta = self.token_metadata_by_id.get(&id).unwrap();
@@ -92,6 +94,8 @@ impl Contract {
 
     /// Get the RootNFT from given token ID.
     pub fn get_root(&self, start_id: TokenId) -> TokenId {
+        // **WARNING** Do not do loop! Do RegEx instead, or some other, simple, one-line method that solves this problem.
+
         let mut searched_token_id = start_id;
         loop {
             let current_metadata = self.token_metadata_by_id.get(&searched_token_id.to_owned()).unwrap();

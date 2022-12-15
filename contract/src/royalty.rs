@@ -1,5 +1,7 @@
 use crate::*;
 
+// **WARNING** Most likely this should be removed, or MOVED to the MotherContract. It is already removed from lib.rs
+
 pub trait NonFungibleTokenCore {
     // Calculates the payout for a token given the passed in balance. This is a view method (Forever Royalty)
     fn nft_payout(&self, token_id: String, balance: U128, max_len_payout: u32) -> Payout;

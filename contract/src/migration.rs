@@ -3,6 +3,8 @@ use near_sdk::{
     log, PromiseResult
 };
 
+// **WARNING** This sould be obsolate, it's almost sure that it should be deleted entirely
+
 #[near_bindgen]
 impl Contract {
     pub fn migration_callback(&mut self) {

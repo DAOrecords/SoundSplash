@@ -1,5 +1,7 @@
 use crate::*;
 
+// **WARNING** This whole file should be deleted.
+
 #[near_bindgen]
 impl Contract {
     /// Will save the client-side encrypted key

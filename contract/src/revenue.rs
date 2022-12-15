@@ -1,5 +1,7 @@
 use crate::*;
 
+// **WARNING** Most likely this should be removed, or MOVED to the MotherContract. It is already removed from lib.rs
+
 #[near_bindgen]
 impl Contract {
     // Calculates the revenue payout

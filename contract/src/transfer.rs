@@ -1,5 +1,7 @@
 use crate::*;
 
+// **WARNING** Most likely this is good, transfer should stay as it is, we are not handling money here.
+
 #[near_bindgen]
 impl Contract {
     /// Transfers the NFT from the current owner to a new owner
@@ -27,6 +29,6 @@ impl Contract {
         if initial_storage_usage < env::storage_usage() {
           required_storage_in_bytes = env::storage_usage() - initial_storage_usage;
         }          
-        refund_deposit(required_storage_in_bytes, U128(0));                                     // Refund extra amount payed
+        refund_deposit(required_storage_in_bytes);                                              // Refund extra amount payed
     }
 }

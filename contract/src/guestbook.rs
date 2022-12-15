@@ -3,6 +3,9 @@ use near_sdk::serde::{Serialize, Deserialize};
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 
 
+// **WARNING** This is working, but it's not sure that we want this here.
+
+
 #[derive(Serialize, Deserialize, BorshDeserialize, BorshSerialize, Clone, Debug)]                                 
 #[serde(crate = "near_sdk::serde")]
 pub struct GuestBookEntry {
@@ -40,7 +43,7 @@ impl Contract {
         self.guestbook.push(new_entry);                                                         // Saves the new entry
 
         let required_storage_in_bytes = env::storage_usage() - initial_storage_usage;
-        refund_deposit(required_storage_in_bytes, U128(0));                                     // Refund extra amount payed
+        refund_deposit(required_storage_in_bytes);                                              // Refund extra amount payed
     }
 
     /// Gives back `limit` guestbook entries from `from_index`

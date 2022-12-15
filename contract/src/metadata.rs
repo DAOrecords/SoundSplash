@@ -28,13 +28,13 @@ pub struct TokenMetadata {
     pub description: Option<String>,                              // free-form description
     pub media: Option<String>,                                    // URL to associated media, preferably to decentralized, content-addressed storage
     pub media_hash: Option<Base64VecU8>,                          // Base64-encoded sha256 hash of content referenced by the `media` field. Required if `media` is included.
-    pub copies: Option<u64>,                                      // number of copies of this set of metadata in existence when token was minted.
+    pub copies: Option<u64>,                                      // number of copies of this set of metadata in existence when token was minted. // **WARNING** This field could be used instead of instance nonce
     pub issued_at: Option<u64>,                                   // When token was issued or minted, Unix epoch in milliseconds
     pub expires_at: Option<u64>,                                  // When token expires, Unix epoch in milliseconds
     pub starts_at: Option<u64>,                                   // When token starts being valid, Unix epoch in milliseconds
     pub updated_at: Option<u64>,                                  // When token was last updated, Unix epoch in milliseconds
     pub extra: Option<String>,                                    // Anything extra the NFT wants to store on-chain. Can be stringified JSON.
-    pub reference: Option<String>,                                // URL to an off-chain JSON file with more info.
+    pub reference: Option<String>,                                // URL to an off-chain JSON file with more info. // **WARNING** Moving forward, probably we should use this to store all the Music-related data, do not use 'extra'
     pub reference_hash: Option<Base64VecU8>,                      // Base64-encoded sha256 hash of JSON from reference field. Required if `reference` is included.
 }
 
@@ -43,8 +43,6 @@ pub struct Token {
     pub owner_id: AccountId,                                      // Owner of the token
     pub approved_account_ids: HashMap<AccountId, u64>,            // List of approved account IDs that have access to transfer the token. This maps an account ID to an approval ID
     pub next_approval_id: u64,                                    // Next approval ID
-    pub royalty: HashMap<AccountId, u32>,                         // Royalties (Forever Royalties)
-    pub revenue: HashMap<AccountId, u32>                          // Revenue table (only used at first purchase)
 }
 
 #[derive(Serialize, Deserialize)]                                 
@@ -53,9 +51,8 @@ pub struct Extra {
     pub music_cid: Option<String>,
     pub music_hash: Option<Base64VecU8>,
     pub parent: Option<TokenId>,
-    pub instance_nounce: u32,
-    pub generation: u32,
-    pub original_price: SalePriceInYoctoNear,
+    pub instance_nonce: u32,                                    // **WARNING** Probably we should use 'copies' instead
+    pub generation: u32,                                        // **WARNING** Most likely we will keep this
 }
 
 #[derive(Serialize, Deserialize, Debug)]                          // This is what we will get on the front-end
@@ -65,8 +62,6 @@ pub struct JsonToken {
     pub owner_id: AccountId,
     pub metadata: TokenMetadata,
     pub approved_account_ids: HashMap<AccountId, u64>,
-    pub royalty: HashMap<AccountId, u32>,
-    pub revenue: HashMap<AccountId, u32>
 }
 
 pub trait NonFungibleTokenMetadata {

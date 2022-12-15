@@ -1,5 +1,8 @@
 use crate::*;
 
+// **WARNING** This will be totally obsolated by the MotherContract, we are not handling money in this contract
+// **WARNING** Except if we accidentally sent in money, and we need to get it out somehow
+
 #[near_bindgen]
 impl Contract {
     #[payable]

@@ -2,6 +2,8 @@ use std::fmt;
 
 use near_sdk::serde::{Deserialize, Serialize};
 
+// **WARNING** Depending on what we see on a block explorer, we should update the events & logs that we are emmiting
+
 /// Enum that represents the data type of the EventLog.
 /// The enum can either be an NftMint or an NftTransfer.
 #[derive(Serialize, Deserialize, Debug)]
