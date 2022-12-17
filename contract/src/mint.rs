@@ -14,7 +14,7 @@ impl Contract {
         &mut self,
         metadata: TokenMetadata,
         receiver_id: AccountId,
-    ) {
+    ) -> MintRootResult {
         log!("Starting MintRoot...");
 
         assert_eq!(
@@ -65,10 +65,15 @@ impl Contract {
 
         env::log_str(&nft_mint_log.to_string());                                                // Log the serialized json.
 
-        self.create_children(token_id.clone(), token_id);                                       // This has to happen before the refund
+        self.create_children(token_id.clone(), token_id.clone());                               // This has to happen before the refund
 
         let required_storage_in_bytes = env::storage_usage() - initial_storage_usage;
         refund_deposit(required_storage_in_bytes);                                              // Refund not-used storage
+
+        MintRootResult {
+            contract: env::current_account_id(),
+            root_id: token_id
+        }
     }
 
 

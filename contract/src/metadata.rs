@@ -74,3 +74,10 @@ impl NonFungibleTokenMetadata for Contract {
         self.metadata.get().unwrap()
     }
 }
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(crate = "near_sdk::serde")]
+pub struct MintRootResult {
+    pub contract: AccountId,                                        // Name of the minting contract
+    pub root_id: TokenId,                                           // ID of the RootNFT
+}
