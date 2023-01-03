@@ -14,7 +14,7 @@ pub trait NonFungibleTokenCore {
         &mut self,
         receiver_id: AccountId,
         token_id: TokenId,
-        approval_id: u64,
+        approval_id: Option<u64>,
         memo: Option<String>,
     );
 
@@ -24,7 +24,7 @@ pub trait NonFungibleTokenCore {
         &mut self,
         receiver_id: AccountId,
         token_id: TokenId,
-        approval_id: u64,
+        approval_id: Option<u64>,
         memo: Option<String>,
         msg: String,
     ) -> PromiseOrValue<bool>;
@@ -88,7 +88,7 @@ impl NonFungibleTokenCore for Contract {
         &mut self,
         receiver_id: AccountId,
         token_id: TokenId,
-        approval_id: u64,
+        approval_id: Option<u64>,
         memo: Option<String>,
     ) {
         assert_one_yocto();                                                                 // Assert that the user attached exactly 1 yoctoNEAR. This is for security and so that the user will be redirected to the NEAR wallet. 
@@ -98,7 +98,7 @@ impl NonFungibleTokenCore for Contract {
             &sender_id,
             &receiver_id,
             &token_id,
-            Some(approval_id),
+            approval_id,
             memo,
         );
 
@@ -113,7 +113,7 @@ impl NonFungibleTokenCore for Contract {
         &mut self,
         receiver_id: AccountId,
         token_id: TokenId,
-        approval_id: u64,
+        approval_id: Option<u64>,
         memo: Option<String>,
         msg: String,
     ) -> PromiseOrValue<bool> {
@@ -124,7 +124,7 @@ impl NonFungibleTokenCore for Contract {
             &sender_id,
             &receiver_id,
             &token_id,
-            Some(approval_id),
+            approval_id,
             memo.clone(),
         );
     
@@ -187,26 +187,45 @@ impl NonFungibleTokenResolver for Contract {
         approved_account_ids: HashMap<AccountId, u64>,
         memo: Option<String>,
     ) -> bool {        
-        if let PromiseResult::Successful(value) = env::promise_result(0) {                  // Whether receiver wants to return token back to the sender, based on `nft_on_transfer` call result.
-            if let Ok(return_token) = near_sdk::serde_json::from_slice::<bool>(&value) {    //As per the standard, the nft_on_transfer should return whether we should return the token to it's owner or not
-                if !return_token {
-                    refund_approved_account_ids(owner_id, &approved_account_ids);
-                    return true;
+        
+        // Get whether token should be returned
+        let must_revert = match env::promise_result(0) {
+            PromiseResult::NotReady => { env::log_str("Result - Not Ready"); env::abort() },
+            PromiseResult::Successful(value) => {
+                env::log_str("Result - Success");
+                if let Ok(yes_or_no) = near_sdk::serde_json::from_slice::<bool>(&value) {
+                    env::log_str(&(yes_or_no as i32).to_string());
+                    !yes_or_no
+                } else {
+                    true
                 }
             }
+            PromiseResult::Failed => { env::log_str("Result - Failed"); true },
+        };
+
+        // if call succeeded, return early
+        if !must_revert {
+            return true;
         }
 
+        env::log_str("Un-successful, returning NFT back to old owner");
+        // OTHERWISE, try to set owner back to previous_owner_id and restore approved_account_ids
+
         let mut token = if let Some(token) = self.tokens_by_id.get(&token_id) {
+            // Check that receiver didn't already transfer it away or burn it.
             if token.owner_id != receiver_id {
+                // The token is not owned by the receiver anymore. Can't return it.
                 refund_approved_account_ids(owner_id, &approved_account_ids);
                 return true;
             }
             token
         } else {
+            // The token was burned and doesn't exist anymore.
+            // Refund storage cost for storing approvals to original owner and return early.
             refund_approved_account_ids(owner_id, &approved_account_ids);
             return true;
         };
-        
+
         self.internal_remove_token_from_owner(&receiver_id.clone(), &token_id);             // We remove the token from the receiver
         self.internal_add_token_to_owner(&owner_id, &token_id);                             // We add the token to the original owner
 
