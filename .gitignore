@@ -49,3 +49,4 @@ report.*
 /backend/.env.production.local
 /backend/.cache
 
+/contract/target
