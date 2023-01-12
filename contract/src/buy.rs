@@ -21,13 +21,13 @@ impl Contract {
             env::current_account_id(), 
             "Token must be owned by Vault"
         );
-
+/*
         assert_eq!(                                               // This big number is 0.1 NEAR. Most of the time 0.075 NEAR will be refunded
 	        u128::from(the_extra.original_price) + 100000000000000000000000,    // **WARNING**  We wouldn't need the 0.1 NEAR, if we could be sure that the contract will always have enough money. This is something that we haven't ensured.
 	        u128::from(env::attached_deposit()), 
 	        "Must send the exact amount"
         );
-        
+*/        
         let root_id = self.get_root(token_id.clone());            // root could be calculated with string manipulation as well.
         assert_eq!(                                               // Assert that this is the next one in line
             &self.get_next_buyable(root_id.clone()), 
@@ -49,8 +49,8 @@ impl Contract {
         // The problem is, we want to have a marketplace as well. So there we should have the contract, that way we will have 2 contracts
         // We can create a testing-app, which would be just a very simple marketplace
         // **WARNING** This is mostly not true, the revenue table / royalty table does not work that way.
-
-        let payout_table = self.revenue_payout(                   // Will contain amounts in yoctoNEAR
+// **WARNING this should be removed, Mother Contract should do this ->
+        /*let payout_table = self.revenue_payout(                   // Will contain amounts in yoctoNEAR
             token_id.clone(),
             price,
             6
@@ -59,9 +59,9 @@ impl Contract {
         for (key, amount) in payout_table.payout.iter() {         // Send the money to each account on the list
             let beneficiary = key.clone();
             Promise::new(beneficiary).transfer(u128::from(amount.clone()));
-        }
+        }*/
         // **WARNING** It is possible that this is going to change, because the DAO will handle that part.
-
+// **WARNING <- this should be deleted, Mother Contract should do this
         self.create_children(
             root_id, 
             token_id
