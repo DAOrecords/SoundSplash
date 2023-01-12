@@ -48,6 +48,7 @@ impl Contract {
         let mut extra_obj: Extra = serde_json::from_str(&modified_metadata.extra.unwrap()).unwrap();
         extra_obj.instance_nonce = 0;
         extra_obj.generation = 1;                                                               // The Root NFT is the first generation
+        extra_obj.next_buyable = Some(0);                                                       // fono-root-X-0 is the first instance that can be bought
         modified_metadata.extra = Some(serde_json::to_string(&extra_obj).unwrap());
 
         self.token_metadata_by_id.insert(&token_id, &modified_metadata);                        // Insert new NFT
@@ -101,6 +102,7 @@ impl Contract {
             let mut extra_obj: Extra = serde_json::from_str(&metadata.extra.unwrap()).unwrap();
             
             extra_obj.parent =  Some(parent.clone());                                           // We write the parent to the current NFT extra
+            extra_obj.next_buyable = None;                                                      // Only RootNFT has this field!
             
             // **WARNING** If Gen1 can be purchased, all of this logic will change!
             if extra_obj.generation == 1 {                                                      // If called from mint_root()

@@ -53,6 +53,7 @@ pub struct Extra {
     pub parent: Option<TokenId>,
     pub instance_nonce: u32,                                    // **WARNING** Probably we should use 'copies' instead
     pub generation: u32,                                        // **WARNING** Most likely we will keep this
+    pub next_buyable: Option<u32>
 }
 
 #[derive(Serialize, Deserialize, Debug)]                          // This is what we will get on the front-end

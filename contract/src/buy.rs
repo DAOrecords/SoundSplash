@@ -21,7 +21,10 @@ impl Contract {
             self.owner_id,                                        // Vault
             "Token must be owned by Vault"
         );
-/*
+
+        // CALLER MUST BE OWNER!!
+
+/* MOVE THIS TO DAO CONTRACT
         assert_eq!(                                               // This big number is 0.1 NEAR. Most of the time 0.075 NEAR will be refunded
 	        u128::from(the_extra.original_price) + 100000000000000000000000,    // **WARNING**  We wouldn't need the 0.1 NEAR, if we could be sure that the contract will always have enough money. This is something that we haven't ensured.
 	        u128::from(env::attached_deposit()), 
@@ -29,6 +32,8 @@ impl Contract {
         );
 */        
         let root_id = self.get_root(token_id.clone());            // root could be calculated with string manipulation as well.
+        log!("Root ID: {:?}", root_id);
+        log!("Next buyable: {:?}", self.get_next_buyable(root_id.clone()));
         assert_eq!(                                               // Assert that this is the next one in line
             &self.get_next_buyable(root_id.clone()), 
             &token_id, 
@@ -36,7 +41,7 @@ impl Contract {
         );
 
         self.internal_transfer(                                   // Transfer the NFT from Vault to the new owner
-            &env::current_account_id(), 
+            &env::current_account_id(),                           // not good.
             &env::signer_account_id(), 
             &token_id, 
             None,                                                 // No approval ID
