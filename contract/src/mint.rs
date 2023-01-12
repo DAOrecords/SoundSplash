@@ -119,7 +119,7 @@ impl Contract {
             //env::log_str(&serde_json::to_string(&root_extra_obj).unwrap());
 
             let token = Token {
-                owner_id: env::current_account_id(),
+                owner_id: self.owner_id.clone(),
                 approved_account_ids: Default::default(),                                       // This is an individual NFT, all the values should start with 0,
                 next_approval_id: 0,                                                            // just like in the Root
             };
@@ -132,7 +132,7 @@ impl Contract {
             
             
             self.token_metadata_by_id.insert(&token_id, &metadata);                             // Insert new NFT
-            self.internal_add_token_to_owner(&token.owner_id, &token_id);                       // &token.owner_id will refer to self (contract)
+            self.internal_add_token_to_owner(&token.owner_id, &token_id);                       // &token.owner_id will refer to Vault
             
             let nft_mint_log: EventLog = EventLog {                                             // Construct the mint log as per the events standard.
                 standard: NFT_STANDARD_NAME.to_string(),                                        // same as with Root

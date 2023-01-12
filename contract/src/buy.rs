@@ -18,7 +18,7 @@ impl Contract {
         
         assert_eq!(                                               // Assert if the NFT is in the Vault. **WARNING** We wouldn't need all these if we wouldn't let them decide which one they want to buy next (they can't decide. There is only 1 option.)
             the_token.owner_id, 
-            self.owner_id, 
+            self.owner_id,                                        // Vault
             "Token must be owned by Vault"
         );
 /*
