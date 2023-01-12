@@ -67,10 +67,17 @@ impl Contract {
         // **WARNING** It is possible that this is going to change, because the DAO will handle that part.
 // **WARNING <- this should be deleted, Mother Contract should do this
         self.create_children(
-            root_id, 
+            root_id.clone(), 
             token_id
         );
         // **WARNING** We thought about changing this part, we wouldn't create the children in this run, only when we need it. I think if it's not too expensive, it makes sense to leave it as it is.
+
+        // increment next_buyable, we are doing this on the RootNFT
+        let mut metadata = self.token_metadata_by_id.get(&root_id.clone()).unwrap();
+        let mut extra_obj: Extra = serde_json::from_str(&metadata.extra.unwrap()).unwrap();
+        extra_obj.next_buyable = Some(extra_obj.next_buyable.unwrap() + 1);
+        metadata.extra = Some(serde_json::to_string(&extra_obj).unwrap());
+        self.token_metadata_by_id.insert(&root_id, &metadata);
 
 
         let required_storage_in_bytes = env::storage_usage() - initial_storage_usage;
