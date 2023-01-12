@@ -40,7 +40,7 @@ impl Contract {
         );
 
         self.internal_transfer(                                   // Transfer the NFT from Vault to the new owner
-            &env::current_account_id(),                           // not good.
+            &the_token.owner_id,
             &env::signer_account_id(), 
             &token_id, 
             None,                                                 // No approval ID
