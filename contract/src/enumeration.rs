@@ -71,25 +71,11 @@ impl Contract {
     pub fn get_next_buyable(&self, root_id: TokenId) -> TokenId {
         log!("root_id: {}", &root_id);
         // **WARNING** most likely this is much simplier then this. Possible we will need to create a `last_bought` variable next to instance_nonce
-
         let root_meta = self.token_metadata_by_id.get(&root_id.clone());
         let root_extra: Extra = serde_json::from_str(&root_meta.unwrap().extra.unwrap()).unwrap();
+        //let root_extra: Extra = Some(root_meta.unwrap().extra);
         
-        let mut lowest_id = "".to_string();
-        let mut lowest = 999_999;
-        for i in 0..root_extra.instance_nonce {
-            let id = root_id.to_string() + "-" + &i.to_string();
-            if self.tokens_by_id.get(&id).unwrap().owner_id == env::current_account_id() {           // If the token is in the Vault ...
-                let instance_meta = self.token_metadata_by_id.get(&id).unwrap();
-                let instance_extra: Extra = serde_json::from_str(&instance_meta.extra.unwrap()).unwrap();
-                if instance_extra.generation < lowest {                                              // ... we check if it has the lowest generation
-                    lowest = instance_extra.generation;                                              // We first sell the first generation, then the second, and so on
-                    lowest_id = id;
-                }
-            }
-        }
-
-        lowest_id
+        format!("{}-{}", root_id, root_extra.next_buyable.unwrap())
     }
 
     /// Get the RootNFT from given token ID.

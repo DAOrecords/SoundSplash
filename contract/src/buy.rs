@@ -32,7 +32,6 @@ impl Contract {
         );
 */        
         let root_id = self.get_root(token_id.clone());            // root could be calculated with string manipulation as well.
-        log!("Root ID: {:?}", root_id);
         log!("Next buyable: {:?}", self.get_next_buyable(root_id.clone()));
         assert_eq!(                                               // Assert that this is the next one in line
             &self.get_next_buyable(root_id.clone()), 
