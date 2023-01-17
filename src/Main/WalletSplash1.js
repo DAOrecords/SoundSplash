@@ -35,7 +35,7 @@ export default function Wallet({setShowWallet, showWallet, transparent, setMenuO
     setShowWallet(!showWallet);
   }
 
-  if (!window.walletConnection.isSignedIn()) {
+  if (!window.wallet.walletSelector.isSignedIn()) {
     return (
       <>
         <div className="controls controlsLast">

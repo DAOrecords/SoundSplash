@@ -4,8 +4,8 @@ import nearLogo from '../assets/near.svg';
 
 
 export default function Wallet({setShowWallet, showWallet, setMenuOpen, setSplashMenuOpen}) {
-  const [balance, setBalance] = React.useState("NaN");
-  const [dollar, setDollar] = React.useState("NaN");
+  const [balance, setBalance] = React.useState(0);
+  const [dollar, setDollar] = React.useState(0);
 
   React.useEffect(async () => {
     const result = await getBalance();
@@ -35,7 +35,7 @@ export default function Wallet({setShowWallet, showWallet, setMenuOpen, setSplas
     setShowWallet(!showWallet);
   }
 
-  if (!window.walletConnection.isSignedIn()) {
+  if (!window.wallet.walletSelector.isSignedIn()) {
     return (
       <>
         <div className="controls mainControlsLast">

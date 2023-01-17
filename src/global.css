@@ -802,7 +802,7 @@ main {
 
 .title {
   margin: auto;
-  margin-top: 48px;
+  /* margin-top: 48px; */
   text-align: center;
   font-style: normal;
   font-weight: bold;

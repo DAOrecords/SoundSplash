@@ -52,7 +52,11 @@ export default function InfoModal({id, metadata, newAction, setOpenModal}) {
   }
 
   async function transfer() {
-    await fetch(`https://nearblocks.io/api/account/balance?address=${receiver}`)                        // Test if account exists or not (by account balance)
+    var url = "https://nearblocks.io/api/account/balance?address=";
+    if(window.accountId.includes(".testnet")){
+      url = "https://testnet.nearblocks.io/api/account/balance?address=";
+    }
+    await fetch(url + `${receiver}`)                        // Test if account exists or not (by account balance)
       .then((res) => res.json())
       .then((json) => {
         if (json.balance) {                                                                             // Initiate the transfer if the balance field exists (otherwise we would have a message field instead)

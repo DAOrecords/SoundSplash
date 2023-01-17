@@ -33,6 +33,7 @@ import Landing from './Main/Landing';
 
 
 export default function App() {
+  console.log(window.contract);
   const [configObj, setConfigObj] = React.useState({});
   const [actionHistory, setActionHistory] = React.useState([]);                                         // For the Notifications drop-down. But now we only have this in Admin
   const [showActivity, setShowActivity] = React.useState(false);
@@ -51,7 +52,9 @@ export default function App() {
       owner_id: process.env.CONTRACT_NAME || configObj.contractName,
       admin: configObj.admin
     }
-    window.contract.new_default_meta(args)                                                            // This could be 'new' for user provided init, we are using default
+
+    var contract = window.contractName;
+    window.wallet.callMethod({ method: 'new_default_meta', args: { root_args }, contractId: contract })                                                           // This could be 'new' for user provided init, we are using default
       .then((msg) => console.log("Initialized! ", msg))
       .catch((err) => console.error(err));
   }

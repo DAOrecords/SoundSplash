@@ -55,7 +55,12 @@ export default function Landing({newAction, openGuestBook, setGuestBook, setShow
     } else if (urlParams.includes('transactionHashes')) {
       
       console.log("urlObj.get('contract'): ", urlObj.get('contract'))
-      await fetch(`https://daorecords.io:8443/update/nfts_for_owner?owner=${window.accountId}&contract=${urlObj.get('contract')}`)
+      var url = "https://daorecords.io:8443/update/nfts_for_owner?owner=";
+      if(window.accountId.includes(".testnet")){
+        url = "https://daorecords.io:8443/update/nfts_for_owner?testnet=1&owner=";
+      }
+      
+      await fetch(url + `${window.accountId}&contract=${urlObj.get('contract')}`)
         .then((res) => res.json())
         .then((response) => {
           if (response.success) console.log("List of NFTs for user updated (server side)");

@@ -15,7 +15,7 @@
     "start": "echo The app is starting! It will automatically open in your browser when ready && env-cmd -f ./neardev/dev-account.env parcel src/index.html --open",
     "dev": "nodemon --watch contract/src -e rs --exec \"npm run start\"",
     "test": "npm run build:contract:debug && cd contract && cargo test -- --nocapture && cd .. && jest test --runInBand",
-    "startWeb": "parcel src/index.html --open"
+    "startWeb": "parcel src/index.html --open 'google chrome'"
   },
   "devDependencies": {
     "@babel/core": "~7.14.0",
@@ -35,12 +35,16 @@
     "shelljs": "~0.8.4"
   },
   "dependencies": {
+    "@near-wallet-selector/core": "^7.4.0",
+    "@near-wallet-selector/modal-ui": "^7.4.0",
+    "@near-wallet-selector/my-near-wallet": "^7.4.0",
+    "@near-wallet-selector/near-wallet": "^7.0.0",
     "axios": "^0.26.1",
     "crypto-js": "^4.1.1",
     "cuid": "^2.1.8",
     "debounce": "^1.2.1",
     "moment": "^2.29.4",
-    "near-api-js": "~0.43.1",
+    "near-api-js": "^0.44.2",
     "react": "~17.0.1",
     "react-dom": "~17.0.1",
     "react-draggable": "^4.4.5",

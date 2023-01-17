@@ -19,8 +19,12 @@ export default function NftCard({playClicked, artistList, openTransfer, index, m
   }
 
   useEffect(async () => {
-    console.log("fetch: ", `https://daorecords.io:8443/get/thumbnail?root_id=${rootID}&contract=${contract}`)
-    await fetch(`https://daorecords.io:8443/get/thumbnail?root_id=${rootID}&contract=${contract}`)
+    var url = "https://daorecords.io:8443/get/thumbnail?root_id=";
+    if(window.accountId.includes(".testnet")){
+      url = "https://daorecords.io:8443/get/thumbnail?testnet=1&root_id=";
+    }
+    console.log("fetch: ", url + `${rootID}&contract=${contract}`)
+    await fetch(url + `${rootID}&contract=${contract}`)
       .then((res) => res.json())
       .then((json) => setPicture("data:image/webp;base64," + json.thumbnail))
       .catch((err) => console.error("Error while fetching base64 image ", err));

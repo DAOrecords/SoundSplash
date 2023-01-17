@@ -1,6 +1,6 @@
 /** We don't use this for config. We use getRealConfig for config */
 //const CONTRACT_NAME = process.env.CONTRACT_NAME;
-const CONTRACT_NAME = "fono-root.optr.near";
+const CONTRACT_NAME = "nft.soundsplash.testnet";
 
 
 function getConfig(env) {
