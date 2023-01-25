@@ -1,6 +1,7 @@
 import { connect, Contract, keyStores, WalletConnection, utils, KeyPair, providers } from 'near-api-js';
 import * as nearAPI from "near-api-js";
 const CryptoJS = require('crypto-js');
+const STAKING_CONTRACT = "staking.daorecordsio.testnet";
 
 const mode = 'development';       // 'mainnet' || 'development'
 
@@ -399,4 +400,25 @@ export function logout() {
 
 export async function login() {
   window.wallet.signIn();
+}
+
+export async function stake_token(token_id, contract) {
+  let result = false;
+  const gas = 200000000000000;
+  const amount = 1; //utils.format.parseNearAmount("0.1");
+  const args = {
+    receiver_id: STAKING_CONTRACT,
+    token_id: token_id,
+    msg: ""
+  }
+
+  var contract = window.contractName;
+  await window.wallet.callMethod({ method: 'nft_transfer_call', args, contractId: contract, deposit: amount, gas  })
+    .then((response) => {
+      response == true ? console.log("Successfully staked NFT!!") : console.log("Staking Failed");
+      result = response;
+    })
+    .catch((err) => console.error(err));
+
+  return result;
 }

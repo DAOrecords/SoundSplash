@@ -20,9 +20,10 @@ export default function NftCard({playClicked, artistList, openTransfer, index, m
 
   useEffect(async () => {
     var url = "https://daorecords.io:8443/get/thumbnail?root_id=";
-    if(window.accountId.includes(".testnet")){
+    if(window.accountId.includes(".testnet")) {
       url = "https://daorecords.io:8443/get/thumbnail?testnet=1&root_id=";
     }
+
     console.log("fetch: ", url + `${rootID}&contract=${contract}`)
     await fetch(url + `${rootID}&contract=${contract}`)
       .then((res) => res.json())
@@ -33,6 +34,7 @@ export default function NftCard({playClicked, artistList, openTransfer, index, m
   function stakeClicked(event) {
     event.stopPropagation();
     window.alert("Stake clicked. This is not implemented yet.");
+    // utils.stake_token(tokenId, contract);
   }
 
   function sellClicked(event) {
