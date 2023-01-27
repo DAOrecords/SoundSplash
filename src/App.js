@@ -30,7 +30,7 @@ import ReactDraggableGridSize from './Experiment/ReactDraggableGridSize';
 import ReactDraggableFont from './Experiment/ReactDraggableFont';
 import Troaco from './Main/Troaco/Troaco';
 import Landing from './Main/Landing';
-
+import 'regenerator-runtime/runtime';
 
 export default function App() {
   console.log(window.contractName);
