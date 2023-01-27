@@ -20,7 +20,7 @@ export default function NftCard({playClicked, artistList, openTransfer, index, m
 
   useEffect(async () => {
     var url = "https://daorecords.io:8443/get/thumbnail?root_id=";
-    if(window.accountId.includes(".testnet")) {
+    if(window.accountId && window.accountId.includes(".testnet")) {
       url = "https://daorecords.io:8443/get/thumbnail?testnet=1&root_id=";
     }
 

@@ -66,7 +66,7 @@ export default function TransferModal({newAction}) {
 
   async function transfer() {
     var url = "https://nearblocks.io/api/account/balance?address=";
-    if(window.accountId.includes(".testnet")){
+    if(window.accountId && window.accountId.includes(".testnet")){
       url = "https://testnet.nearblocks.io/api/account/balance?address=";
     }
     await fetch(url + `${receiver}`)                        // Test if account exists or not (by account balance)

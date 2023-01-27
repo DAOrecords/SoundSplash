@@ -56,7 +56,7 @@ export default function Landing({newAction, openGuestBook, setGuestBook, setShow
       
       console.log("urlObj.get('contract'): ", urlObj.get('contract'))
       var url = "https://daorecords.io:8443/update/nfts_for_owner?owner=";
-      if(window.accountId.includes(".testnet")){
+      if(window.accountId && window.accountId.includes(".testnet")){
         url = "https://daorecords.io:8443/update/nfts_for_owner?testnet=1&owner=";
       }
       

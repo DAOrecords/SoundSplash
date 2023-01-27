@@ -200,7 +200,7 @@ export async function getListForAccount() {
   }
 
   var url = "https://daorecords.io:8443/get/nft_list_for_owner?user=";
-  if(window.accountId.includes(".testnet")){
+  if(window.accountId && window.accountId.includes(".testnet")){
     url = "https://daorecords.io:8443/get/nft_list_for_owner?testnet=1&user=";
   }
 
@@ -220,7 +220,7 @@ export async function getNftListWithThumbnails(start, pageSize) {
 
   let result = [];
   var url = "https://daorecords.io:8443/get/nft_list";
-  if(window.accountId.includes(".testnet")){
+  if(window.accountId && window.accountId.includes(".testnet")){
     url = "https://daorecords.io:8443/get/nft_list?testnet=1";
   }
   
@@ -237,7 +237,7 @@ export async function getNftListWithThumbnails(start, pageSize) {
 export async function getNumberOfNfts() {
   let result = null;
   var url = "https://daorecords.io:8443/get/nft_list_length";
-  if(window.accountId.includes(".testnet")){
+  if(window.accountId && window.accountId.includes(".testnet")){
     url = "https://daorecords.io:8443/get/nft_list_length?testnet=1";
   }
 
