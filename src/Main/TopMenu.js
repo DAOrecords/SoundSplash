@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-// import 'regenerator-runtime/runtime';
+import 'regenerator-runtime/runtime';
 import Wallet from './Wallet';
 import hamburger from '../assets/hamburger.svg';
 

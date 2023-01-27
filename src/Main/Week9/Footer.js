@@ -2,7 +2,7 @@ import React from 'react';
 import DaoLogo from '../../assets/DaoLogoSplash3.svg';
 import RealityChain from '../../assets/RealityChainSplash2.svg';
 import CryptoVoxels from '../../assets/CryptoVoxelsSplash2.svg';
-// import 'regenerator-runtime/runtime';
+import 'regenerator-runtime/runtime';
 
 /** Footer for Week9 */
 export default function Footer() {

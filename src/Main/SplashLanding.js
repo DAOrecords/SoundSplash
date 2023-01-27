@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getBuyableTokens, verify_sha256 } from '../utils';
-// import 'regenerator-runtime/runtime';
+import 'regenerator-runtime/runtime';
 import Equalizer from './Equalizer';
 import SplashLandingGrid from './SplashLandingGrid';
 import FooterSplash1 from './FooterSplash1';

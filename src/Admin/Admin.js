@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-// import 'regenerator-runtime/runtime';
+import 'regenerator-runtime/runtime';
 const axios = require('axios');
 const CryptoJS = require('crypto-js'); 
 import MediaDropzone from './MediaDropzone';
