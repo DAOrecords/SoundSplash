@@ -50,9 +50,10 @@
     "react-draggable": "^4.4.5",
     "react-dropzone": "^11.5.1",
     "react-router-dom": "^6.2.1",
-    "react-scripts": "1.1.0",
+    "react-scripts": "5.0.1",
     "react-toastify": "^8.1.0",
     "regenerator-runtime": "~0.13.5",
+    "serve": "^14.2.0",
     "uint8arrays": "^3.0.0"
   },
   "resolutions": {
