@@ -2,7 +2,7 @@ import React from 'react';
 import DaoLogo from '../assets/DaoLogo.svg';
 import RealityChain from '../assets/RealityChainLogo.svg';
 import CryptoVoxels from '../assets/CryptoVoxelsLogo.svg';
-
+import 'regenerator-runtime/runtime';
 
 /** Footer for Main */
 export default function Footer() {

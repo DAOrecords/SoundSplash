@@ -33,7 +33,7 @@ import Landing from './Main/Landing';
 
 
 export default function App() {
-  console.log(window.contract);
+  console.log(window.contractName);
   const [configObj, setConfigObj] = React.useState({});
   const [actionHistory, setActionHistory] = React.useState([]);                                         // For the Notifications drop-down. But now we only have this in Admin
   const [showActivity, setShowActivity] = React.useState(false);
