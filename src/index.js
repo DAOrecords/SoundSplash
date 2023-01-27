@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import App from './App';
 // import { initContract } from './utils';
 import './global.css';
+import 'regenerator-runtime/runtime'
+
 
 import { Wallet } from './near-wallet';
 
