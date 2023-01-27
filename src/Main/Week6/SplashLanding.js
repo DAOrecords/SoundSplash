@@ -2,7 +2,7 @@ import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getBuyableTokens } from '../../utils';
-import 'regenerator-runtime/runtime';
+// import 'regenerator-runtime/runtime';
 import LineVisualizer from './Equalizer';
 import SplashLandingGrid from './SplashLandingGrid';
 import Footer from './Footer';

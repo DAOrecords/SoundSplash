@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import hamburger from '../../assets/whiteHamburger.svg'
-import 'regenerator-runtime/runtime';
+// import 'regenerator-runtime/runtime';
 import Wallet from './Wallet';
 import logo from '../../assets/SoundSplashLogo.svg'
 
