@@ -200,7 +200,7 @@ export async function getListForAccount() {
   }
 
   var url = "https://daorecords.io:8443/get/nft_list_for_owner?user=";
-  if(window.accountId && window.accountId.includes(".testnet")){
+  if(isTestnet()){
     url = "https://daorecords.io:8443/get/nft_list_for_owner?testnet=1&user=";
   }
 
@@ -220,7 +220,7 @@ export async function getNftListWithThumbnails(start, pageSize) {
 
   let result = [];
   var url = "https://daorecords.io:8443/get/nft_list";
-  if(window.accountId && window.accountId.includes(".testnet")){
+  if(isTestnet()){
     url = "https://daorecords.io:8443/get/nft_list?testnet=1";
   }
   
@@ -237,7 +237,7 @@ export async function getNftListWithThumbnails(start, pageSize) {
 export async function getNumberOfNfts() {
   let result = null;
   var url = "https://daorecords.io:8443/get/nft_list_length";
-  if(window.accountId && window.accountId.includes(".testnet")){
+  if(isTestnet()){
     url = "https://daorecords.io:8443/get/nft_list_length?testnet=1";
   }
 
@@ -421,4 +421,8 @@ export async function stake_token(token_id, contract) {
     .catch((err) => console.error(err));
 
   return result;
+}
+
+export function isTestnet(){
+  return window.wallet.network == "testnet";
 }

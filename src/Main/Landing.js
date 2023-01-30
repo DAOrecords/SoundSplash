@@ -3,7 +3,7 @@ import { ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from './Footer';
 import TopMenu from './TopMenu';
-import { getListForAccount, getNextBuyableInstance, getNftDetailsForList, getNftListWithThumbnails, getNumberOfNfts } from '../utils';
+import { getListForAccount, getNextBuyableInstance, getNftDetailsForList, getNftListWithThumbnails, getNumberOfNfts, isTestnet } from '../utils';
 import artistLists from '../artistLists.json';
 import { useNavigate } from 'react-router-dom';
 import Cd1 from '../assets/cd1.png';
@@ -56,7 +56,7 @@ export default function Landing({newAction, openGuestBook, setGuestBook, setShow
       
       console.log("urlObj.get('contract'): ", urlObj.get('contract'))
       var url = "https://daorecords.io:8443/update/nfts_for_owner?owner=";
-      if(window.accountId && window.accountId.includes(".testnet")){
+      if(isTestnet()){
         url = "https://daorecords.io:8443/update/nfts_for_owner?testnet=1&owner=";
       }
       

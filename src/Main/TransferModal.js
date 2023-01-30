@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import AudioPlayer from '../Common/AudioPlayer';
 import AudioPlayerNftStorage from "../Common/AudioPlayerNftStorage";
-import { getAllFromRoot, getContractName, getNftDetailsForList, transferNft, verify_sha256 } from '../utils';
+import { getAllFromRoot, getContractName, getNftDetailsForList, isTestnet, transferNft, verify_sha256 } from '../utils';
 import artistLists from '../artistLists.json';
 
 
@@ -66,7 +66,7 @@ export default function TransferModal({newAction}) {
 
   async function transfer() {
     var url = "https://nearblocks.io/api/account/balance?address=";
-    if(window.accountId && window.accountId.includes(".testnet")){
+    if(isTestnet()){
       url = "https://testnet.nearblocks.io/api/account/balance?address=";
     }
     await fetch(url + `${receiver}`)                        // Test if account exists or not (by account balance)

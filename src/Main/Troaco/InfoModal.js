@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { utils } from 'near-api-js';
-import { getAllFromRoot, transferNft } from '../../utils';
+import { getAllFromRoot, isTestnet, transferNft } from '../../utils';
 import SlimAudioPlayer from '../../Common/SlimAudioPlayer';
 import nearLogo from '../../assets/near_white.svg';
 import closeIcon from '../../assets/close.svg';
@@ -53,7 +53,7 @@ export default function InfoModal({id, metadata, newAction, setOpenModal}) {
 
   async function transfer() {
     var url = "https://nearblocks.io/api/account/balance?address=";
-    if(window.accountId && window.accountId.includes(".testnet")){
+    if(isTestnet()){
       url = "https://testnet.nearblocks.io/api/account/balance?address=";
     }
     await fetch(url + `${receiver}`)                        // Test if account exists or not (by account balance)

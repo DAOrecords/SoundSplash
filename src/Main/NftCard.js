@@ -3,6 +3,7 @@ import { utils } from 'near-api-js';
 import nearLogo from '../assets/ic_near.svg';
 import placeholder from '../assets/DaoLogo.svg';
 import playIcon from '../assets/play.svg';
+import { isTestnet } from '../utils';
 
 
 export default function NftCard({playClicked, artistList, openTransfer, index, metadata, tokenId, contract}) {
@@ -20,7 +21,7 @@ export default function NftCard({playClicked, artistList, openTransfer, index, m
 
   useEffect(async () => {
     var url = "https://daorecords.io:8443/get/thumbnail?root_id=";
-    if(window.accountId && window.accountId.includes(".testnet")) {
+    if(isTestnet()) {
       url = "https://daorecords.io:8443/get/thumbnail?testnet=1&root_id=";
     }
 
