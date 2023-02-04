@@ -7,10 +7,19 @@ use crate::*;
 impl Contract {
     /// Buy an NFT from the Vault (the contract). Only the next highest level NFT can be purchased (e.g. gen-2, not gen-5)
     #[payable]
-    pub fn buy_nft_from_vault(&mut self, token_id: TokenId) {
+    pub fn buy_nft_from_vault(&mut self, root_id: TokenId) -> bool {
         env::log_str(&"Start of buy_nft_from_vault".to_string());
 
         let initial_storage_usage = env::storage_usage();         // Take note of initial storage usage for refund
+
+        let token_id = self.get_next_buyable(root_id.clone());
+        log!("Next buyable: {:?}", token_id.clone());//let root_id = self.get_root(token_id.clone());            // root could be calculated with string manipulation as well.
+        
+        assert_eq!(                                               // Assert that this is the next one in line
+            &self.get_next_buyable(root_id.clone()), 
+            &token_id, 
+            "This is not the token that should be bought next."
+        );
 
         let the_token = self.tokens_by_id.get(&token_id.to_string()).unwrap();
         let the_meta = self.token_metadata_by_id.get(&token_id.to_string()).unwrap();
@@ -31,13 +40,6 @@ impl Contract {
 	        "Must send the exact amount"
         );
 */        
-        let root_id = self.get_root(token_id.clone());            // root could be calculated with string manipulation as well.
-        log!("Next buyable: {:?}", self.get_next_buyable(root_id.clone()));
-        assert_eq!(                                               // Assert that this is the next one in line
-            &self.get_next_buyable(root_id.clone()), 
-            &token_id, 
-            "This is not the token that should be bought next."
-        );
 
         self.internal_transfer(                                   // Transfer the NFT from Vault to the new owner
             &the_token.owner_id,
@@ -77,6 +79,7 @@ impl Contract {
         let mut extra_obj: Extra = serde_json::from_str(&metadata.extra.unwrap()).unwrap();
         extra_obj.next_buyable = Some(extra_obj.next_buyable.unwrap() + 1);
         metadata.extra = Some(serde_json::to_string(&extra_obj).unwrap());
+        log!("Next buyable: {}", extra_obj.next_buyable.unwrap());
         self.token_metadata_by_id.insert(&root_id, &metadata);
 
 
@@ -84,5 +87,7 @@ impl Contract {
         refund_deposit(required_storage_in_bytes);                // Refund extra amount payed (NFT price + storage cost is the amount needed)
 
         env::log_str(&"End of buy_nft_from_vault".to_string());
+
+        true
     }
 }

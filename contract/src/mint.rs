@@ -22,8 +22,8 @@ impl Contract {
             env::predecessor_account_id(),
             "Only admin can mint new Root-NFTs!"
         );
-
-        let initial_storage_usage = env::storage_usage();                                       // Take note of initial storage usage for refund
+// **WARNING** It should be mandatory to include some deposit, altough if only the MotherContract can mint, that is not that much important.
+        let initial_storage_usage = env::storage_usage();                                      // Take note of initial storage usage for refund
 
         let token_id = "fono-root-".to_string() + &self.root_nonce.to_string();                // We generate the ID for the RootNFT. The RootNFT ID only has 1 number in it, like fono-root-22
         self.root_nonce = self.root_nonce + 1;                                                 // We increment nonce to avoid collision

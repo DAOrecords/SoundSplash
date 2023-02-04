@@ -50,6 +50,8 @@ pub struct Token {
 pub struct Extra {
     pub music_cid: Option<String>,
     pub music_hash: Option<Base64VecU8>,
+    pub animation_url: Option<String>,
+    pub animation_url_hash: Option<Base64VecU8>,
     pub parent: Option<TokenId>,
     pub instance_nonce: u32,                                    // **WARNING** Probably we should use 'copies' instead
     pub generation: u32,                                        // **WARNING** Most likely we will keep this
